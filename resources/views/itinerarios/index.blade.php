@@ -6,9 +6,11 @@
     <div class="card">
         <div class="card-header d-flex justify-content-between">
             <h3 class="card-title">Actividades del Curso: {{ $curso->nombre }}</h3>
-            <button class="btn btn-success btn-sm" onclick="showCreateActivityModal({{ $curso->id }})">
-                <i class="fas fa-laptop-code"></i> Crear Actividad
-            </button>            
+            @if(auth()->user()->hasRole('Administrador') || auth()->user()->hasRole('Capacitador'))
+                <button class="btn btn-success btn-sm" onclick="showCreateActivityModal({{ $curso->id }})">
+                    <i class="fas fa-laptop-code"></i> Crear Actividad
+                </button> 
+            @endif           
         </div>
         <div class="card-body table-responsive">
             <table id="itinerariosTable" class="table table-bordered table-striped">
@@ -51,11 +53,17 @@ $(document).ready(function() {
                 data: null, 
                 name: 'acciones',
                 render: function (data, type, row) {
-                    return `
-                        <button class="btn btn-warning btn-sm" onclick="editItinerario(${row.id})">Editar</button>
-                        <button class="btn btn-danger btn-sm" onclick="deleteItinerario(${row.id})">Eliminar</button>
-                    `;
-                }
+                    @if(auth()->user()->hasRole('Administrador') || auth()->user()->hasRole('Capacitador'))
+                        return `
+                            <button class="btn btn-warning btn-sm" onclick="editItinerario(${row.id})">Editar</button>
+                            <button class="btn btn-danger btn-sm" onclick="deleteItinerario(${row.id})">Eliminar</button>
+                        `;
+                    @else
+                        return '';
+                    @endif
+                },
+                orderable: false,
+                searchable: false,
             }
         ],
         language: {
@@ -63,7 +71,7 @@ $(document).ready(function() {
         }
     });
 
-// Función para abrir el modal y cargar los datos para editar
+    // Función para abrir el modal y cargar los datos para editar
     window.editItinerario = function(id) {
         $.get(`/itinerarios/${id}/edit`, function(data) {
             $('#editActivityForm').attr('action', `/itinerarios/${id}`);
@@ -80,7 +88,7 @@ $(document).ready(function() {
         });
     };
 
-// Manejar la sumisión del formulario de edición
+    // Manejar la sumisión del formulario de edición
     $('#editActivityForm').submit(function(event) {
         event.preventDefault();
 
@@ -102,7 +110,6 @@ $(document).ready(function() {
             }
         });
     });
-
 
     // Función para confirmar la eliminación con SweetAlert
     $.ajaxSetup({
@@ -157,4 +164,3 @@ $(document).ready(function() {
 });
 </script>
 @stop
-

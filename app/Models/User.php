@@ -97,11 +97,26 @@ class User extends Authenticatable
      */
     public function adminlte_image()
     {
-        return $this->image ? asset($this->image) : 'https://ui-avatars.com/api/?name=' . urlencode($this->name);
+        return $this->image ? asset('storage/'.$this->image) : 'https://ui-avatars.com/api/?name=' . urlencode($this->name);
     }
 
     public function cursos()
     {
         return $this->hasMany(Curso::class, 'capacitador_id');
+    }
+    
+    public function registros()
+    {
+        return $this->hasMany(Registro::class, 'usuario_id');
+    }
+
+    public function asistencias()
+    {
+        return $this->hasMany(Asistencia::class, 'usuario_id');
+    }
+
+    public function pagos()
+    {
+        return $this->hasMany(Pago::class, 'usuario_id');
     }
 }

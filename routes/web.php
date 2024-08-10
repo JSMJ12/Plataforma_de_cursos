@@ -9,6 +9,10 @@ use App\Http\Controllers\UsuariosController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\CursoController;
 use App\Http\Controllers\ItinerarioController;
+use App\Http\Controllers\RegistroController;
+use App\Http\Controllers\PagoController;
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -21,7 +25,8 @@ use App\Http\Controllers\ItinerarioController;
 |
 */
 
-Route::get('/', function () {  return redirect()->route('login');});
+Route::get('/', [DashboardParticipanteController::class, 'cursosParticipantes'])->name('participante.cursos');
+
 Route::get('/out', function () {
     return view('out');
 })->name('out');
@@ -53,6 +58,7 @@ Route::resource('cursos', CursoController::class);
 
 Route::put('/cursos/{id}/finalizar', [CursoController::class, 'finalizarCurso'])->name('cursos.finalizar');
 Route::put('/cursos/reactivar/{id}', [CursoController::class, 'reactivar'])->name('cursos.reactivar');
+Route::get('/cursos-registrados', [DashboardParticipanteController::class, 'cursosRegistrados'])->name('cursos.registrados');
 
 
 //itinerarios
@@ -61,5 +67,12 @@ Route::resource('itinerarios', ItinerarioController::class);
 Route::get('itinerarios/cursos/{id}', [ItinerarioController::class, 'itinerariosCursos'])->name('itinerarios.cursos');
 Route::get('itinerarios/data/{cursoId}', [ItinerarioController::class, 'getItinerariosData'])->name('itinerarios.data');
 
-
+//Registros
+Route::resource('registros', RegistroController::class);
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+//pagos
+Route::resource('pagos', PagoController::class);
+
+//registro
+Route::resource('registro', RegistroController::class);

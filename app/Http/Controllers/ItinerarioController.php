@@ -78,21 +78,33 @@ class ItinerarioController extends Controller
     public function itinerariosCursos($cursoId)
     {
         $curso = Curso::with('itinerarios')->findOrFail($cursoId);
+        $user = auth()->user();
+        $isAdminOrCapacitador = $user->hasRole('Administrador') || $user->hasRole('Capacitador');
 
-        return view('itinerarios.index', compact('curso'));
+        return view('itinerarios.index', compact('curso', 'isAdminOrCapacitador'));
     }
+
 
     public function getItinerariosData(Request $request, $cursoId)
     {
+        $user = auth()->user();
+        $isAdminOrCapacitador = $user->hasRole('Administrador') || $user->hasRole('Capacitador');
+
         $itinerarios = Itinerario::where('curso_id', $cursoId)->get();
 
         return DataTables::of($itinerarios)
-            ->addColumn('acciones', function ($itinerario) {
-                return '
-                    <button class="btn btn-warning btn-sm" onclick="editItinerario(' . $itinerario->id . ')">Editar</button>
-                    <button class="btn btn-danger btn-sm" onclick="deleteItinerario(' . $itinerario->id . ')">Eliminar</button>
-                ';
+            ->addColumn('acciones', function ($itinerario) use ($isAdminOrCapacitador) {
+                if ($isAdminOrCapacitador) {
+                    return '<button class="btn btn-warning btn-sm" onclick="editItinerario(' . $itinerario->id . ')">Editar</button>
+                            <button class="btn btn-danger btn-sm" onclick="deleteItinerario(' . $itinerario->id . ')">Eliminar</button>';
+                }
+                return ''; // No mostrar acciones si no es administrador o capacitador
             })
+            ->addColumn('link', function ($itinerario) {
+                return '<a href="' . $itinerario->link . '" target="_blank">' . $itinerario->link . '</a>';
+            })
+            ->rawColumns(['acciones', 'link']) // Asegúrate de que el contenido HTML se renderiza correctamente
             ->make(true);
     }
+
 }

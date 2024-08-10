@@ -11,14 +11,16 @@ class CreatePagosTable extends Migration
         Schema::create('pagos', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('usuario_id');
+            $table->unsignedBigInteger('curso_id'); // Campo para el ID del curso
             $table->decimal('monto', 10, 2);
             $table->date('fecha_pago');
             $table->string('archivo_comprobante')->nullable();
-            $table->enum('modalidad_pago', ['unica', 'trimestral']);
             $table->boolean('verificado')->default(false);
             $table->timestamps();
 
+            // Definir las claves foráneas
             $table->foreign('usuario_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('curso_id')->references('id')->on('cursos')->onDelete('cascade');
         });
     }
 
@@ -27,4 +29,5 @@ class CreatePagosTable extends Migration
         Schema::dropIfExists('pagos');
     }
 }
+
 

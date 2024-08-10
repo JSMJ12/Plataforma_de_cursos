@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Curso;
 use App\Models\User;
+use App\Models\Registro;
+use App\Models\Itinerario;
+use App\Models\Pago;
 use Illuminate\Support\Facades\Auth;
-
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 
@@ -104,6 +106,35 @@ class CursoController extends Controller
 
         return view('cursos.index');
     }
+
+
+    public function show($id)
+    {
+        if (!auth()->check()) {
+            // Si el usuario no está autenticado, redirige a la vista de login
+            return redirect()->route('login')->with('message', 'Por favor, inicie sesión para ver más detalles.');
+        }
+        $curso = Curso::findOrFail($id);
+        $user = Auth::user();
+        $userRegistered = Registro::where('curso_id', $id)
+            ->where('usuario_id', Auth::id())
+            ->exists();
+
+        $paymentCompleted = Pago::where('usuario_id', $user->id)
+        ->where('curso_id', $curso->id)
+        ->exists();
+        
+
+        // Obtener los itinerarios del curso ordenados por fecha y hora de inicio
+        $itinerarios = Itinerario::where('curso_id', $curso->id)
+            ->orderBy('fecha')
+            ->orderBy('hora_inicio')
+            ->get();
+
+        // Retornar la vista con el curso y sus itinerarios
+        return view('cursos.show', compact('curso', 'itinerarios', 'userRegistered', 'paymentCompleted'));
+    }
+
 
 
     public function edit($id)

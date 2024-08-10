@@ -319,8 +319,18 @@ return [
         [
             'text' => 'Cursos',
             'route'  => 'cursos.index',
-            'icon' => 'fas fa-laptop-code',
+            'icon' => 'fas fa-chalkboard-teacher', // Icono para representar cursos
+            'can' => 'gestionar todos los aspectos'
         ],
+        
+        [
+            'text' => 'Cursos Registrados',
+            'route'  => 'cursos.registrados',
+            'icon' => 'fas fa-clipboard-list', // Icono para representar una lista de cursos registrados
+        ],
+        
+
+
     ],
 
     /*

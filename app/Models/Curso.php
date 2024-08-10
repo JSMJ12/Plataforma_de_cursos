@@ -40,4 +40,8 @@ class Curso extends Model
     {
         return $this->belongsTo(User::class, 'capacitador_id');
     }
+    public function registros()
+    {
+        return $this->hasMany(Registro::class);
+    }
 }

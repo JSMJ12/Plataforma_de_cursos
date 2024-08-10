@@ -27,8 +27,8 @@ class DashboardAdministradorController extends Controller
 
             return DataTables::of($capacitadores)
                 ->addColumn('image', function ($user) {
-                    $url = asset('storage/' . $user->profile_image);
-                    return '<img src="' . $url . '" alt="Foto" width="50" height="50"/>';
+                    $url = asset('storage/' . $user->image);
+                    return '<img src="' . $url . '" alt="Foto" width="50" height="70"/>';
                 })
                 ->addColumn('actions', function ($user) {
                     $btn = '<a href="' . route('usuarios.show', $user->id) . '" class="btn btn-info btn-sm">Ver</a> ';
