@@ -20,7 +20,22 @@ class RegistroController extends Controller
             'tipo_participante' => $request->tipo_participante,
         ]);
 
-        return redirect()->route('participante.cursos')->with('success', 'Registrado en el curso exitosamente.');
+        return redirect()->route('cursos.registrados')->with('success', 'Registrado en el curso exitosamente.');
     }
+
+    public function aprobarCurso(Request $request)
+    {
+        $registro = Registro::find($request->input('registro_id'));
+
+        if ($registro) {
+            $registro->aprobado = true;
+            $registro->save();
+
+            return response()->json(['message' => 'Curso aprobado exitosamente.']);
+        }
+
+        return response()->json(['message' => 'Registro no encontrado.'], 404);
+    }
+
 
 }

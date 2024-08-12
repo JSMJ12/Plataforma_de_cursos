@@ -127,7 +127,7 @@ class UsuariosController extends Controller
             'sexo' => 'string|max:1|nullable',
             'interes' => 'string|max:255|nullable',
             'password' => 'required|string|min:8|confirmed',
-            'role' => 'required|string|in:Capacitador,Participante,Administrador',
+            'role' => 'required|string|in:Capacitador,Participante,Administrador,Secretaria',
             'image' => 'image|mimes:jpeg,png,jpg,gif|max:2048|nullable', // Validación de imagen
         ]);
 
@@ -158,7 +158,7 @@ class UsuariosController extends Controller
         ]);
 
         // Asignar el rol al usuario
-        if ($request->role === 'Capacitador' || $request->role === 'Administrador') {
+        if ($request->role === 'Capacitador' || $request->role === 'Administrador' || $request->role === 'Secretaria') {
             if (Auth::check() && Auth::user()->hasRole('Administrador')) {
                 // Asignar rol de Capacitador o Administrador de inmediato si es un administrador
                 $user->assignRole($request->role);

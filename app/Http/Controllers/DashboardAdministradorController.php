@@ -16,6 +16,7 @@ class DashboardAdministradorController extends Controller
         compact('totalUsuarios', 'totalUsuariosCapacitadores'));
     }
 
+
     public function usuarios_capacitadores(Request $request)
     {
         if ($request->ajax()) {

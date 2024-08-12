@@ -13,6 +13,7 @@ class Registro extends Model
         'curso_id',
         'usuario_id',
         'tipo_participante',
+        'aprobado',
     ];
 
     /**

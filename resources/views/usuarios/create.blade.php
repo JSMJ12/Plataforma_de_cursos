@@ -25,6 +25,7 @@
                                 <option value="Capacitador">Capacitador</option>
                                 <option value="Participante">Participante</option>
                                 <option value="Administrador">Administrador</option>
+                                <option value="Secretaria">Secretaria/o EPSU</option>
                             </select>
                             @error('role')
                                 <div class="text-danger">{{ $message }}</div>

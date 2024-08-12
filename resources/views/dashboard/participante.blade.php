@@ -72,7 +72,7 @@
                         <div class="icon">
                             <i class="fa fa-arrow-circle-right"></i>
                         </div>
-                        <a href="{{ route('participante.cursos') }}" class="small-box-footer">Ver Más Cursos <i class="fa fa-arrow-circle-right"></i></a>
+                        <a href="{{ route('cursos.todos') }}" class="small-box-footer">Ver Más Cursos <i class="fa fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
                 

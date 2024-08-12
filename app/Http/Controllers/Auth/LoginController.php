@@ -47,6 +47,8 @@ class LoginController extends Controller
             return redirect()->route('dashboard_capacitador');
         } elseif ($user->hasRole('Participante')) {
             return redirect()->route('dashboard_participante');
+        }elseif ($user->hasRole('Secretaria')) {
+            return redirect()->route('dashboard_secretario_epsu');
         }
 
         return redirect()->intended($this->redirectTo);

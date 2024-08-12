@@ -14,10 +14,21 @@ use Yajra\DataTables\DataTables;
 
 class CursoController extends Controller
 {
+
+
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $cursos = Curso::with('itinerarios')->get(); // Cargar itinerarios
+            $user = auth()->user();
+
+            // Verificar si el usuario tiene el rol de 'Capacitador'
+            if ($user->hasRole('Capacitador')) {
+                // Obtener solo los cursos creados por el usuario autenticado
+                $cursos = Curso::where('capacitador_id', $user->id)->with('itinerarios')->get();
+            } else {
+                // Obtener todos los cursos
+                $cursos = Curso::with('itinerarios')->get();
+            }
 
             return DataTables::of($cursos)
                 ->addColumn('capacitador_dni', function($curso) {
@@ -25,7 +36,7 @@ class CursoController extends Controller
                 })
                 ->addColumn('estado', function ($curso) {
                     return (int) $curso->finalizado;
-                })                             
+                })
                 ->addColumn('actions', function ($curso) {
                     // Botón para finalizar o reactivar curso
                     $finalizarButton = $curso->finalizado
@@ -43,6 +54,13 @@ class CursoController extends Controller
                                 <i class="fas fa-ban"></i>
                             </button>
                         </form>';
+
+                    // Botón para tomar lista
+                    $takeAttendanceButton = !$curso->finalizado
+                    ? '<a href="' . route('asistencias.index', ['curso_id' => $curso->id]) . '" class="btn btn-warning btn-sm" title="Tomar Lista">
+                        <i class="fas fa-list"></i>
+                    </a>'
+                    : '';
 
                     // Botón para editar
                     $editButton = '
@@ -67,6 +85,7 @@ class CursoController extends Controller
                         <div class="btn-group">
                             ' . $editButton . '
                             ' . $finalizarButton . '
+                            ' . $takeAttendanceButton . '
                             ' . $deleteButton . '
                         </div>
                     ';
@@ -107,7 +126,7 @@ class CursoController extends Controller
         return view('cursos.index');
     }
 
-
+    
     public function show($id)
     {
         if (!auth()->check()) {

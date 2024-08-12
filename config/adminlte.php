@@ -320,7 +320,7 @@ return [
             'text' => 'Cursos',
             'route'  => 'cursos.index',
             'icon' => 'fas fa-chalkboard-teacher', // Icono para representar cursos
-            'can' => 'gestionar todos los aspectos'
+            'can' => ['gestionar todos los aspectos', 'gestionar cursos y asistencia']
         ],
         
         [

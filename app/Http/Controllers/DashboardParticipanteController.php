@@ -31,6 +31,8 @@ class DashboardParticipanteController extends Controller
 
         return view('dashboard.participante', compact('registros', 'asistencias', 'cursosRegistrados', 'cursosFinalizados'));
     }
+
+
     public function cursosParticipantes(Request $request)
     {
         $user = Auth::user();
@@ -54,8 +56,6 @@ class DashboardParticipanteController extends Controller
 
         return view('welcome', compact('cursosActivos'));
     }
-
-    
 
     public function cursosRegistrados()
     {

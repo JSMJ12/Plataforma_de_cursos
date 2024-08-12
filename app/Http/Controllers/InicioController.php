@@ -15,6 +15,8 @@ class InicioController extends Controller
             return redirect()->route('dashboard_capacitador');
         } elseif (auth()->user()->hasRole('Participante')) {
             return redirect()->route('dashboard_participante');
+        }elseif ($user->hasRole('Secretaria')) {
+            return redirect()->route('dashboard_secretario_epsu');
         }
     }
 }

@@ -5,13 +5,15 @@ use App\Http\Controllers\InicioController;
 use App\Http\Controllers\DashboardCapacitadorController;
 use App\Http\Controllers\DashboardAdministradorController;
 use App\Http\Controllers\DashboardParticipanteController;
+use App\Http\Controllers\DashboardSecretarioEpsuController;
 use App\Http\Controllers\UsuariosController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\CursoController;
 use App\Http\Controllers\ItinerarioController;
 use App\Http\Controllers\RegistroController;
 use App\Http\Controllers\PagoController;
-
+use App\Http\Controllers\AsistenciaController;
+use App\Http\Controllers\HomeController;
 
 
 /*
@@ -26,6 +28,8 @@ use App\Http\Controllers\PagoController;
 */
 
 Route::get('/', [DashboardParticipanteController::class, 'cursosParticipantes'])->name('participante.cursos');
+// Ruta para mostrar todos los cursos activos y manejar la búsqueda
+Route::get('/cursos-todos', [HomeController::class, 'cursosTodos'])->name('cursos.todos');
 
 Route::get('/out', function () {
     return view('out');
@@ -37,6 +41,7 @@ Route::get('/login/token/{token}', [LoginController::class, 'loginWithToken'])->
 Route::get('/dashboard/capacitador', [DashboardCapacitadorController::class, 'index'])->middleware('can:gestionar cursos y asistencia')->name('dashboard_capacitador');
 Route::get('/dashboard/admin', [DashboardAdministradorController::class, 'index'])->middleware('can:gestionar todos los aspectos')->name('dashboard_admin');
 Route::get('/dashboard/participante', [DashboardParticipanteController::class, 'index'])->middleware('can:ver cursos y asistencia')->name('dashboard_participante');
+Route::get('/dashboard/participante', [DashboardSecretarioEpsuController::class, 'index'])->middleware('can:control de cursos y pagos')->name('dashboard_secretario_epsu');
 Route::get('/inicio', [InicioController::class, 'redireccionarDashboard'])->name('inicio');
 
 
@@ -68,11 +73,19 @@ Route::get('itinerarios/cursos/{id}', [ItinerarioController::class, 'itinerarios
 Route::get('itinerarios/data/{cursoId}', [ItinerarioController::class, 'getItinerariosData'])->name('itinerarios.data');
 
 //Registros
-Route::resource('registros', RegistroController::class);
+Route::resource('registro', RegistroController::class);
+Route::post('/aprobacion', [RegistroController::class, 'aprobarCurso'])->name('aprobacion');
+
+
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 //pagos
 Route::resource('pagos', PagoController::class);
+Route::post('/pagos/validar/{pago}', [PagoController::class, 'validar'])->name('pagos.validar');
 
-//registro
-Route::resource('registro', RegistroController::class);
+//Asistencias
+Route::middleware(['auth'])->group(function () {
+    Route::get('/asistencias', [AsistenciaController::class, 'index'])->name('asistencias.index');
+    Route::post('/asistencias', [AsistenciaController::class, 'store'])->name('asistencias.store');
+});
+
