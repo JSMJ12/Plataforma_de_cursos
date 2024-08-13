@@ -8,6 +8,11 @@
                 </button>
             </div>
             <div class="modal-body">
+                <!-- Imagen de las cuentas bancarias -->
+                <div class="text-center mb-4">
+                    <img src="{{ asset('images/numero_cuenta.jpeg') }}" alt="Cuentas Bancarias" class="img-fluid">
+                </div>
+
                 <form action="{{ route('pagos.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <input type="hidden" name="usuario_id" value="{{ Auth::user()->id }}">

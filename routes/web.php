@@ -41,7 +41,7 @@ Route::get('/login/token/{token}', [LoginController::class, 'loginWithToken'])->
 Route::get('/dashboard/capacitador', [DashboardCapacitadorController::class, 'index'])->middleware('can:gestionar cursos y asistencia')->name('dashboard_capacitador');
 Route::get('/dashboard/admin', [DashboardAdministradorController::class, 'index'])->middleware('can:gestionar todos los aspectos')->name('dashboard_admin');
 Route::get('/dashboard/participante', [DashboardParticipanteController::class, 'index'])->middleware('can:ver cursos y asistencia')->name('dashboard_participante');
-Route::get('/dashboard/participante', [DashboardSecretarioEpsuController::class, 'index'])->middleware('can:control de cursos y pagos')->name('dashboard_secretario_epsu');
+Route::get('/dashboard/EPSU', [DashboardSecretarioEpsuController::class, 'index'])->middleware('can:control de cursos y pagos')->name('dashboard_secretario_epsu');
 Route::get('/inicio', [InicioController::class, 'redireccionarDashboard'])->name('inicio');
 
 
