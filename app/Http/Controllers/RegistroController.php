@@ -30,10 +30,13 @@ class RegistroController extends Controller
     public function aprobarCurso(Request $request)
     {
         try {
+            // Buscar el registro
             $registro = Registro::find($request->input('registro_id'));
 
             if ($registro) {
-                \Log::info('Registro encontrado: ' . $registro->id);
+                // Marcar el registro como aprobado
+                $registro->aprobado = true;
+                $registro->save();
 
                 $usuario = $registro->usuario;
                 $curso = $registro->curso;
@@ -43,7 +46,7 @@ class RegistroController extends Controller
                     return \Carbon\Carbon::createFromFormat('Y-m-d', $fecha);
                 });
 
-                // Agrupar fechas por mes (solo el mes)
+                // Agrupar fechas por mes
                 $fechasAgrupadas = $fechas->groupBy(function($fecha) {
                     return $fecha->format('m');
                 });
@@ -74,28 +77,30 @@ class RegistroController extends Controller
                 $rutaArchivo = 'certificados/participantes/' . $nombreArchivo;
                 $urlCertificado = url(Storage::url($rutaArchivo));
                 $qrCode = QrCode::format('png')
-                ->size(100)
-                ->eye('circle')
-                ->gradient(24, 115, 108, 33, 68, 59, 'diagonal')
-                ->errorCorrection('H')
-                ->generate($urlCertificado);
+                    ->size(100)
+                    ->eye('circle')
+                    ->gradient(24, 115, 108, 33, 68, 59, 'diagonal')
+                    ->errorCorrection('H')
+                    ->generate($urlCertificado);
 
                 $pdf = Pdf::loadView('certificados.participantes', compact('usuario', 'qrCode', 'curso', 'fechasFormateadas'))
-                        ->setPaper('a4', 'landscape');
+                    ->setPaper('a4', 'landscape')
+                    ->setOption('margin-top', 0)
+                    ->setOption('margin-bottom', 0)
+                    ->setOption('margin-left', 0)
+                    ->setOption('margin-right', 0)
+                    ->setOption('disable-smart-shrinking', true);
                 Storage::disk('public')->put($rutaArchivo, $pdf->output());
 
-                \Log::info('Certificado generado: ' . $rutaArchivo);
-
                 return response()->json([
-                    'message' => 'Curso aprobado, certificado y QR generados exitosamente.',
+                    'message' => 'Participante aprobado exitosamente.',
                 ]);
             }
 
             return response()->json(['message' => 'Registro no encontrado.'], 404);
         } catch (\Exception $e) {
-            \Log::error('Error al generar el certificado: ' . $e->getMessage());
-
             return response()->json(['message' => 'Error al generar el certificado: ' . $e->getMessage()], 500);
         }
     }
+
 }

@@ -89,61 +89,63 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        document.querySelectorAll('.aprobar-curso').forEach(function(button) {
-            button.addEventListener('click', function() {
-                let registroId = this.getAttribute('data-registro-id');
-                
-                Swal.fire({
-                    title: '¿Estás seguro?',
-                    text: "No podrás revertir esta acción",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Sí, aprobar curso!'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        fetch('{{ route("aprobacion") }}', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                            },
-                            body: JSON.stringify({ registro_id: registroId })
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.ruta) {
-                                Swal.fire(
-                                    'Aprobado!',
-                                    data.message,
-                                    'success'
-                                );
-                                button.disabled = true;
+    document.querySelectorAll('.aprobar-curso').forEach(function(button) {
+        button.addEventListener('click', function() {
+            let registroId = this.getAttribute('data-registro-id');
+            
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: "No podrás revertir esta acción",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sí, aprobar curso!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    fetch('{{ route("aprobacion") }}', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        body: JSON.stringify({ registro_id: registroId })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.message) {
+                            Swal.fire(
+                                'Aprobado!',
+                                data.message,
+                                'success'
+                            );
 
-                                // Abrir el PDF en una nueva ventana
-                                window.open(data.ruta, '_blank');
-                            } else {
-                                Swal.fire(
-                                    'Error!',
-                                    data.message,
-                                    'error'
-                                );
-                            }
-                        })
-                        .catch(error => {
+                            // Recargar la página
+                            setTimeout(() => {
+                                location.reload();
+                            }, 1000); // Esperar un segundo antes de recargar
+                        } else {
                             Swal.fire(
                                 'Error!',
-                                'No se pudo aprobar el curso.',
+                                data.message,
                                 'error'
                             );
-                            console.error('Error:', error);
-                        });
-                    }
-                });
+                        }
+                    })
+                    .catch(error => {
+                        Swal.fire(
+                            'Error!',
+                            'No se pudo aprobar el curso.',
+                            'error'
+                        );
+                        console.error('Error:', error);
+                    });
+                }
             });
         });
     });
+});
+
 
 </script>
 @stop

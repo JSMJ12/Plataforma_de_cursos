@@ -28,10 +28,15 @@
                             <th>Horas Académicas</th>
                             <th>Imagen</th>
                             <th>Itinerario</th>
+                            <th>Certificado</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach($cursos as $curso)
+                        @php
+                            $nombreArchivo = $user->name . '_' . $user->apellidop . '_' . $curso->id . '.pdf';
+                            $rutaCertificado = url('storage/certificados/participantes/' . $nombreArchivo);
+                        @endphp
                             <tr>
                                 <td>
                                     <div class="d-flex align-items-center">
@@ -50,8 +55,15 @@
                                     <img src="{{ asset('storage/' . $curso->image) }}" class="img-fluid" alt="{{ $curso->nombre }}" style="max-width: 100px;">
                                 </td>
                                 <td>
-                                    <a href="{{ route('itinerarios.cursos', ['id' => $curso->id]) }}" class="btn btn-info">Ver Itinerario</a>
+                                    <a href="{{ route('itinerarios.cursos', ['id' => $curso->id]) }}" title="Ver Itinerario" class="btn btn-info">
+                                        <i class="fas fa-arrow-right"></i>
+                                    </a>
                                 </td>
+                                <td>
+                                    <a href="{{ $rutaCertificado }}" class="btn btn-primary" target="_blank" title="Ver Certificado">
+                                        <i class="fas fa-arrow-right"></i>
+                                    </a>
+                                </td>                                
                             </tr>
                         @endforeach
                     </tbody>

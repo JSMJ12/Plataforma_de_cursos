@@ -5,33 +5,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Certificado</title>
     <style>
+        @page {
+            margin: 0; /* Elimina los márgenes de la página */
+        }
         body, html {
             margin: 0;
             padding: 0;
             height: 100%;
             width: 100%;
             font-family: Arial, sans-serif;
-            background-color: #f3f3f3;
             color: #333;
         }
+
         .certificate-container {
             width: 100%;
-            height: 100%;
+            height: 100vh; /* Usa 100vh para que cubra toda la altura visible de la ventana del navegador */
             padding: 0;
             background-image: url("{{ public_path('images/fondo_certificado.png') }}");
-            background-size: 110% 110%; /* Aumenta el tamaño del fondo para cubrir más área */
+            background-size: cover; /* Asegura que la imagen de fondo cubra toda la página */
             background-repeat: no-repeat;
             background-position: center;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            position: relative; /* Cambiado de absolute a relative */
-            top: -20px; /* Expande el fondo hacia arriba */
-            left: -10px; /* Ajusta este valor para mover el fondo más a la derecha */
-            right: -10px; /* Expande el fondo hacia la derecha */
-            bottom: -20px; /* Expande el fondo hacia abajo */
+            position: relative;
         }
+
         .header {
             text-align: center;
             margin-top: 20px;
@@ -52,7 +52,7 @@
         }
         .content {
             text-align: center;
-            margin-top: 20px;
+            margin: 20px 0;
         }
         .content p {
             font-size: 14px;
@@ -66,13 +66,13 @@
         }
         .footer {
             text-align: center;
-            margin-bottom: 20px; /* Ajusta este valor para mover el sello más abajo */
+            margin-bottom: 20px;
             position: relative;
         }
         .footer img {
-            max-width: 130px; /* Tamaño del sello aumentado */
+            max-width: 130px;
             display: block;
-            margin: 20px auto 0; /* Mueve el sello más abajo y lo centra horizontalmente */
+            margin: 30px auto 0;
         }
         .footer p {
             font-size: 14px;
@@ -83,17 +83,16 @@
             display: inline-block;
             width: 45%;
             vertical-align: top;
-            margin-top: 60px; /* Ajusta este valor según sea necesario */
+            margin-top: 60px;
         }
         .footer .signature p {
             margin: 5px 0;
         }
         #qr-code {
             position: absolute;
-            bottom: 50px;
-            right: 5px;
+            bottom: 110px; /* Ajusta la posición del QR code según sea necesario */
+            right: 25px;
         }
-        
     </style>
 </head>
 <body>

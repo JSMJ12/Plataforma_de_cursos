@@ -104,7 +104,7 @@ class DashboardParticipanteController extends Controller
             ->get()
             ->pluck('curso');
 
-        return view('cursos.finalizados', compact('cursos'));
+        return view('cursos.finalizados', compact('cursos','user'));
     }
 
 }
