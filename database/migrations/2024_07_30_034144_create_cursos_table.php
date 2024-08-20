@@ -22,6 +22,8 @@ return new class extends Migration
             $table->enum('tipo', ['Maestría', 'Instituto']);
             $table->string('nombre_maestria')->nullable(); // Campo para el nombre de la maestría en caso de ser tipo "Maestría"
             $table->string('image')->nullable();
+            $table->string('tipo_curso')->nullable();
+            $table->string('coordinador_maestria')->nullable();
             $table->unsignedBigInteger('capacitador_id');
             $table->boolean('finalizado')->default(false); // Campo para controlar si el curso está activo o no
             $table->foreign('capacitador_id')->references('id')->on('users')->onDelete('cascade');

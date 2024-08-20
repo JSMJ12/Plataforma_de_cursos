@@ -63,8 +63,9 @@ Route::resource('cursos', CursoController::class);
 
 Route::put('/cursos/{id}/finalizar', [CursoController::class, 'finalizarCurso'])->name('cursos.finalizar');
 Route::put('/cursos/reactivar/{id}', [CursoController::class, 'reactivar'])->name('cursos.reactivar');
-Route::get('/cursos-registrados', [DashboardParticipanteController::class, 'cursosRegistrados'])->name('cursos.registrados');
 
+Route::get('/cursos-registrados', [DashboardParticipanteController::class, 'cursosRegistrados'])->name('cursos.registrados');
+Route::get('/cursos-finalizados', [DashboardParticipanteController::class, 'cursosFinalizados'])->name('cursos.finalizados');
 
 //itinerarios
 Route::resource('itinerarios', ItinerarioController::class);

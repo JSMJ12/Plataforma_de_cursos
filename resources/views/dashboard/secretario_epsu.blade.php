@@ -24,24 +24,29 @@
             </div>
         </div>
     </div>
-
-    <!-- Gráfico de pagos -->
     <div class="row justify-content-center">
-        <div class="col-lg-8">
+        <div class="col-lg-8 mb-3">
+            <div class="btn-group" role="group" aria-label="Visualización de pagos">
+                <button id="btnDiario" type="button" class="btn btn-primary">Diario</button>
+                <button id="btnMensual" type="button" class="btn btn-primary">Mensual</button>
+                <button id="btnAnual" type="button" class="btn btn-primary">Anual</button>
+            </div>
+        </div>
+    </div>
+    <!-- Gráfico de pagos y tabla de pagos lado a lado -->
+    <div class="row">
+        <div class="col-lg-6">
             <div class="card mb-4">
                 <div class="card-header">
-                    <h3 class="card-title">Gráficos de Pagos</h3>
+                    <h3 class="card-title">Gráfico de Pagos</h3>
                 </div>
                 <div class="card-body">
                     <canvas id="graficoPagos"></canvas>
                 </div>
             </div>
         </div>
-    </div>
-
-    <!-- Tabla de pagos -->
-    <div class="row">
-        <div class="col-lg-12">
+        
+        <div class="col-lg-6">
             <div class="card">
                 <div class="card-header">
                     <h3 class="card-title">Listado de Pagos</h3>
@@ -95,64 +100,29 @@
 <script src="https://cdn.datatables.net/1.10.21/js/dataTables.bootstrap4.min.js"></script>
 <script>
     $(document).ready(function() {
+        // Inicializar DataTable
         $('#tablaPagos').DataTable({
             language: {
-                url: '//cdn.datatables.net/plug-ins/1.10.21/i18n/Spanish.json'
+                url: "https://cdn.datatables.net/plug-ins/1.10.21/i18n/Spanish.json"
             }
         });
 
-        // Datos para el gráfico combinado
-        const pagosDiarios = @json($pagosDiarios);
-        const pagosSemanales = @json($pagosSemanales);
-        const pagosMensuales = @json($pagosMensuales);
-        const pagosAnuales = @json($pagosAnuales);
+        // Datos iniciales (Diarios)
+        const data = {
+            labels: @json($fechasDiarias),
+            datasets: [{
+                label: 'Pagos Diarios',
+                data: @json($pagosDiarios),
+                borderColor: 'rgba(75, 192, 192, 1)',
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderWidth: 1,
+                fill: true
+            }]
+        };
 
-        const fechasDiarias = @json($fechasDiarias);
-        const fechasSemanales = @json($fechasSemanales);
-        const fechasMensuales = @json($fechasMensuales);
-        const fechasAnuales = @json($fechasAnuales);
-
-        // Gráfico combinado de Pagos
-        const ctxPagos = document.getElementById('graficoPagos').getContext('2d');
-        new Chart(ctxPagos, {
+        const config = {
             type: 'line',
-            data: {
-                labels: fechasDiarias.concat(fechasSemanales).concat(fechasMensuales).concat(fechasAnuales),
-                datasets: [
-                    {
-                        label: 'Pagos Diarios',
-                        data: pagosDiarios,
-                        borderColor: 'rgba(75, 192, 192, 1)',
-                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                        borderWidth: 1,
-                        fill: true
-                    },
-                    {
-                        label: 'Pagos Semanales',
-                        data: pagosSemanales,
-                        borderColor: 'rgba(153, 102, 255, 1)',
-                        backgroundColor: 'rgba(153, 102, 255, 0.2)',
-                        borderWidth: 1,
-                        fill: true
-                    },
-                    {
-                        label: 'Pagos Mensuales',
-                        data: pagosMensuales,
-                        borderColor: 'rgba(255, 159, 64, 1)',
-                        backgroundColor: 'rgba(255, 159, 64, 0.2)',
-                        borderWidth: 1,
-                        fill: true
-                    },
-                    {
-                        label: 'Pagos Anuales',
-                        data: pagosAnuales,
-                        borderColor: 'rgba(255, 99, 132, 1)',
-                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                        borderWidth: 1,
-                        fill: true
-                    }
-                ]
-            },
+            data: data,
             options: {
                 responsive: true,
                 scales: {
@@ -164,7 +134,33 @@
                     }
                 }
             }
+        };
+
+        // Crear gráfico
+        const ctx = document.getElementById('graficoPagos').getContext('2d');
+        let graficoPagos = new Chart(ctx, config);
+
+        // Función para actualizar el gráfico
+        function actualizarGrafico(labels, data, label) {
+            graficoPagos.data.labels = labels;
+            graficoPagos.data.datasets[0].data = data;
+            graficoPagos.data.datasets[0].label = label;
+            graficoPagos.update();
+        }
+
+        // Manejar clicks en los botones
+        $('#btnDiario').click(function() {
+            actualizarGrafico(@json($fechasDiarias), @json($pagosDiarios), 'Pagos Diarios');
+        });
+
+        $('#btnMensual').click(function() {
+            actualizarGrafico(@json($fechasMensuales), @json($pagosMensuales), 'Pagos Mensuales');
+        });
+
+        $('#btnAnual').click(function() {
+            actualizarGrafico(@json($fechasAnuales), @json($pagosAnuales), 'Pagos Anuales');
         });
     });
 </script>
+
 @stop

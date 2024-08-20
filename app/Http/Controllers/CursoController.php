@@ -15,7 +15,6 @@ use Yajra\DataTables\DataTables;
 class CursoController extends Controller
 {
 
-
     public function index(Request $request)
     {
         if ($request->ajax()) {
@@ -31,36 +30,36 @@ class CursoController extends Controller
             }
 
             return DataTables::of($cursos)
-                ->addColumn('capacitador_dni', function($curso) {
+                ->addColumn('capacitador_dni', function ($curso) {
                     return $curso->capacitador ? $curso->capacitador->dni : 'No asignado';
                 })
                 ->addColumn('estado', function ($curso) {
                     return (int) $curso->finalizado;
                 })
-                ->addColumn('actions', function ($curso) {
+                ->addColumn('actions', function ($curso) use ($user) {
                     // Botón para finalizar o reactivar curso
                     $finalizarButton = $curso->finalizado
-                    ? '<form action="' . route('cursos.reactivar', $curso->id) . '" method="POST" style="display: inline;">
-                            ' . csrf_field() . '
-                            ' . method_field('PUT') . '
-                            <button type="submit" class="btn btn-outline-success btn-sm" title="Reactivar">
-                                <i class="fas fa-check-circle"></i>
-                            </button>
-                        </form>'
-                    : '<form action="' . route('cursos.finalizar', $curso->id) . '" method="POST" style="display: inline;">
-                            ' . csrf_field() . '
-                            ' . method_field('PUT') . '
-                            <button type="submit" class="btn btn-outline-danger btn-sm" title="Deshabilitar">
-                                <i class="fas fa-ban"></i>
-                            </button>
-                        </form>';
+                        ? '<form action="' . route('cursos.reactivar', $curso->id) . '" method="POST" style="display: inline;">
+                                ' . csrf_field() . '
+                                ' . method_field('PUT') . '
+                                <button type="submit" class="btn btn-outline-success btn-sm" title="Reactivar">
+                                    <i class="fas fa-check-circle"></i>
+                                </button>
+                            </form>'
+                        : '<form action="' . route('cursos.finalizar', $curso->id) . '" method="POST" style="display: inline;">
+                                ' . csrf_field() . '
+                                ' . method_field('PUT') . '
+                                <button type="submit" class="btn btn-outline-danger btn-sm" title="Finalizar">
+                                    <i class="fas fa-ban"></i>
+                                </button>
+                            </form>';
 
                     // Botón para tomar lista
-                    $takeAttendanceButton = !$curso->finalizado
-                    ? '<a href="' . route('asistencias.index', ['curso_id' => $curso->id]) . '" class="btn btn-warning btn-sm" title="Tomar Lista">
-                        <i class="fas fa-list"></i>
-                    </a>'
-                    : '';
+                    $takeAttendanceButton = $user->hasRole('Capacitador') && !$curso->finalizado
+                        ? '<a href="' . route('asistencias.index', ['curso_id' => $curso->id]) . '" class="btn btn-warning btn-sm" title="Tomar Lista">
+                                <i class="fas fa-list"></i>
+                            </a>'
+                        : '';
 
                     // Botón para editar
                     $editButton = '
@@ -82,7 +81,7 @@ class CursoController extends Controller
                     
                     // Concatenar y retornar los botones
                     return '
-                        <div class="btn-group">
+                        <div class="btn-group" style="gap: 5px;">
                             ' . $editButton . '
                             ' . $finalizarButton . '
                             ' . $takeAttendanceButton . '
@@ -123,7 +122,8 @@ class CursoController extends Controller
                 ->make(true);
         }
 
-        return view('cursos.index');
+        $capacitadores = User::role('Capacitador')->get();
+        return view('cursos.index', compact('capacitadores'));
     }
 
     
@@ -154,19 +154,16 @@ class CursoController extends Controller
         return view('cursos.show', compact('curso', 'itinerarios', 'userRegistered', 'paymentCompleted'));
     }
 
-
-
     public function edit($id)
     {
         try {
             // Encuentra el curso
             $curso = Curso::findOrFail($id);
     
-            // Obtiene el DNI del capacitador usando el capacitador_id
-            $capacitadorDni = User::where('id', $curso->capacitador_id)->value('dni'); // Ajusta 'dni' si es necesario
-    
             return response()->json([
+                'tipo_curso' => $curso->tipo_curso,
                 'nombre' => $curso->nombre,
+                'coordinador_maestria' => $curso->coordinador_maestria,
                 'descripcion' => $curso->descripcion,
                 'fecha_inicio' => $curso->fecha_inicio,
                 'fecha_fin' => $curso->fecha_fin,
@@ -175,19 +172,20 @@ class CursoController extends Controller
                 'tipo' => $curso->tipo,
                 'nombre_maestria' => $curso->nombre_maestria,
                 'image' => $curso->image,
-                'capacitador_dni' => $capacitadorDni ? $capacitadorDni : 'No asignado' // Muestra 'No asignado' si no hay DNI
+                'capacitador_id' => $curso->capacitador_id
             ]);
         } catch (\Exception $e) {
             return redirect()->back()->with(['error' => 'Curso no encontrado. ' . $e->getMessage()], 500);
         }
     }
     
-
     public function store(Request $request)
     {
         $request->validate([
-            'capacitador_dni' => 'nullable|string', 
+            'capacitador_dni' => 'required|exists:users,id',
             'nombre' => 'required|string|max:255',
+            'tipo_curso' => 'required|string|max:255',
+            'coordinador_maestria' => 'nullable|string|max:255',
             'descripcion' => 'required|string',
             'fecha_inicio' => 'required|date',
             'fecha_fin' => 'required|date',
@@ -198,22 +196,16 @@ class CursoController extends Controller
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        // Verificar si el usuario logueado tiene el rol de 'Capacitador'
         if (Auth::user()->hasRole('Capacitador')) {
-            $capacitador_id = Auth::id(); // Usar el ID del usuario logueado
+            $capacitador_id = Auth::id(); 
         } else {
-            // Buscar el capacitador por DNI si no es el usuario logueado
-            $capacitador = User::where('dni', $request->capacitador_dni)->first();
-
-            if (!$capacitador) {
-                return redirect()->back()->withErrors(['capacitador_dni' => 'Capacitador no encontrado.']);
-            }
-
-            $capacitador_id = $capacitador->id;
+            $capacitador_id = $request->capacitador_dni;
         }
 
         $curso = new Curso();
         $curso->nombre = $request->nombre;
+        $curso->tipo_curso = $request->tipo_curso;
+        $curso->coordinador_maestria = $request->coordinador_maestria;
         $curso->descripcion = $request->descripcion;
         $curso->fecha_inicio = $request->fecha_inicio;
         $curso->fecha_fin = $request->fecha_fin;
@@ -221,8 +213,8 @@ class CursoController extends Controller
         $curso->horas_academicas = $request->horas_academicas;
         $curso->tipo = $request->tipo;
         $curso->nombre_maestria = $request->nombre_maestria;
-        $curso->capacitador_id = $capacitador_id;
-
+        $curso->capacitador_id = $capacitador_id; 
+        // Manejar la carga de la imagen
         if ($request->hasFile('image')) {
             $file = $request->file('image');
             $filename = time() . '.' . $file->getClientOriginalExtension();
@@ -230,19 +222,21 @@ class CursoController extends Controller
             $curso->image = $filename;
         }
 
+        // Guardar el curso en la base de datos
         $curso->save();
 
         return redirect()->route('cursos.index')->with('success', 'Curso creado exitosamente.');
     }
 
+
     public function update(Request $request, $id)
     {
         $curso = Curso::findOrFail($id);
-
-        // Validar los datos
         $request->validate([
-            'capacitador_dni' => 'nullable|string', 
+            'capacitador_id' => 'required|exists:users,id',
             'nombre' => 'required|string|max:255',
+            'tipo_curso' => 'required|string|max:255',
+            'coordinador_maestria' => 'nullable|string|max:255',
             'descripcion' => 'required|string',
             'fecha_inicio' => 'required|date',
             'fecha_fin' => 'required|date',
@@ -257,14 +251,8 @@ class CursoController extends Controller
         if (Auth::user()->hasRole('Capacitador')) {
             $capacitador_id = Auth::id();
         } else {
-            $capacitador = User::where('dni', $request->capacitador_dni)->first();
+            $capacitador_id = $request->capacitador_id;;
 
-            if (!$capacitador) {
-                return redirect()->back()->withErrors(['capacitador_dni' => 'Capacitador no encontrado.']);
-            }
-
-            // Obtener el ID del capacitador
-            $capacitador_id = $capacitador->id;
         }
 
         // Manejar la imagen
@@ -282,6 +270,8 @@ class CursoController extends Controller
 
         // Actualizar los demás campos
         $curso->nombre = $request->nombre;
+        $curso->tipo_curso = $request->tipo_curso;
+        $curso->coordinador_maestria = $request->coordinador_maestria;
         $curso->descripcion = $request->descripcion;
         $curso->fecha_inicio = $request->fecha_inicio;
         $curso->fecha_fin = $request->fecha_fin;

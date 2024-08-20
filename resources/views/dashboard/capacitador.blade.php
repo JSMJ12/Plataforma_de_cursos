@@ -25,7 +25,7 @@
                             <p class="mb-1"><strong>Email:</strong> {{ Auth::user()->email }}</p>
                             <p class="mb-1"><strong>Ciudad:</strong> {{ Auth::user()->ciudad }}</p>
                             <p class="mb-1"><strong>Celular:</strong> {{ Auth::user()->celular }}</p>
-                            <p class="mb-1"><strong>Nivel de Estudio:</strong> {{ Auth::user()->nivel_estudio }}</p>
+                            <p class="mb-1"><strong>Especialidad:</strong> {{ Auth::user()->especialidad }}</p>
                         </div>
                     </div>
                 </div>
@@ -54,7 +54,7 @@
                             <div class="icon">
                                 <i class="fas fa-check-circle"></i>
                             </div>
-                            <a href="{{ route('cursos.registrados') }}" class="small-box-footer">Más Información <i class="fa fa-arrow-circle-right"></i></a>
+                            <a href="{{ route('cursos.finalizados') }}" class="small-box-footer">Más Información <i class="fa fa-arrow-circle-right"></i></a>
                         </div>
                     </div>
                     <div class="col-lg-6 col-12"> 

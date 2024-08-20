@@ -48,6 +48,20 @@
         .btn-transparent:hover i {
             color: #fff; /* Color del ícono al pasar el cursor */
         }
+        .dataTables_wrapper .dataTables_length,
+        .dataTables_wrapper .dataTables_filter,
+        .dataTables_wrapper .dataTables_info,
+        .dataTables_wrapper .dataTables_paginate,
+        .dataTables_wrapper .dataTables_processing,
+        .dataTables_wrapper .dataTables_scroll,
+        .dataTables_wrapper .dataTables_empty,
+        .dataTables_wrapper .dataTables_header,
+        .dataTables_wrapper .dataTables_footer,
+        table.dataTable {
+            font-size: 14px; 
+            font-family: "Times New Roman", Times, serif;
+        }
+
 
 
     </style>

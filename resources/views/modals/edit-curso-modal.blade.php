@@ -14,6 +14,10 @@
                     @csrf
                     @method('PUT')
                     <div class="form-group">
+                        <label for="edit_tipo_curso">Tipo de Evento</label>
+                        <input type="text" name="tipo_curso" id="edit_tipo_curso" class="form-control" placeholder="Curso, Seminario, Otros" required>
+                    </div>  
+                    <div class="form-group">
                         <label for="edit_nombre">Nombre</label>
                         <input type="text" name="nombre" id="edit_nombre" class="form-control" required>
                     </div>
@@ -44,13 +48,22 @@
                             <option value="Maestría">Maestría</option>
                         </select>
                     </div>
-                    <div id="capacitador_dni_container" class="form-group">
-                        <label for="capacitador_dni">Cédula/Pasaporte del Capacitador</label>
-                        <input type="text" name="capacitador_dni" id="capacitador_dni" class="form-control">
+                    <div class="form-group">
+                        <label for="edit_capacitador">Capacitador</label>
+                        <select name="capacitador_id" id="edit_capacitador" class="form-control" required>
+                            <option value="">Seleccione un capacitador</option>
+                            @foreach($capacitadores as $capacitador)
+                                <option value="{{ $capacitador->id }}">{{ $capacitador->full_name }}</option>
+                            @endforeach
+                        </select>
                     </div>
                     <div class="form-group" id="edit_nombre_maestria_container" style="display: none;">
                         <label for="edit_nombre_maestria">Nombre Maestría</label>
                         <input type="text" name="nombre_maestria" id="edit_nombre_maestria" class="form-control">
+                    </div>
+                    <div class="form-group" id="edit_coordinador_maestria_container" style="display: none;">
+                        <label for="edit_coordinador_maestria">Nombre del Cordinador de la Maestría</label>
+                        <input type="text" name="coordinador_maestria" id="edit_coordinador_maestria" class="form-control">
                     </div>
                     <div class="form-group">
                         <label for="edit_image">Imagen Promocional</label>

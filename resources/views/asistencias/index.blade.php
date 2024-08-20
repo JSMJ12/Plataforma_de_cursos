@@ -4,8 +4,8 @@
 
 @section('content')
 <div class="container">
-    <h1 class="mb-4 d-flex justify-content-between align-items-center">
-        <span>Registro de Asistencias</span>
+    <h1 class="mb-4 text-center font-weight-bold text-success">
+        Registro de Asistencias
     </h1>
 
     <form id="asistencias-form" method="POST" action="{{ route('asistencias.store') }}">
@@ -15,13 +15,13 @@
         <div class="row">
             <div class="col-md-12 mb-4">
                 <div class="card">
-                    <div class="card-header bg-primary text-white">
-                        <h3 class="card-title">{{ $curso->nombre }}</h3>
+                    <div class="card-header bg-success text-white text-center">
+                        <h3 class="card-title font-weight-bold">{{ $curso->nombre }}</h3>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
                             <table class="table table-striped table-bordered" id="asistencias-table">
-                                <thead class="thead-dark">
+                                <thead style="background-color: #e9f7ef;">
                                     <tr>
                                         <th>Usuario</th>
                                         @foreach($curso->itinerarios as $itinerario)
@@ -61,7 +61,7 @@
                                             @endforeach
                                             <td class="text-center">
                                                 @if($asistenciasCompletadas === $totalAsistencias)
-                                                    <button type="button" class="btn btn-success aprobar-curso" 
+                                                    <button type="button" class="btn btn-outline-success aprobar-curso" 
                                                             data-registro-id="{{ $registro->id }}"
                                                             {{ $registro->aprobado ? 'disabled' : '' }}>
                                                         <i class="fas fa-check"></i> Aprobado
@@ -113,13 +113,22 @@
                         })
                         .then(response => response.json())
                         .then(data => {
-                            if (data.message) {
+                            if (data.ruta) {
                                 Swal.fire(
                                     'Aprobado!',
                                     data.message,
                                     'success'
                                 );
                                 button.disabled = true;
+
+                                // Abrir el PDF en una nueva ventana
+                                window.open(data.ruta, '_blank');
+                            } else {
+                                Swal.fire(
+                                    'Error!',
+                                    data.message,
+                                    'error'
+                                );
                             }
                         })
                         .catch(error => {
@@ -135,5 +144,6 @@
             });
         });
     });
+
 </script>
 @stop

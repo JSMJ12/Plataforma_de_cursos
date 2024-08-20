@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('curso_id')->constrained('cursos')->onDelete('cascade');
             $table->unsignedBigInteger('usuario_id'); // Campo para el ID del usuario
             $table->enum('tipo_participante', ['Estudiantes de pregrado', 'Estudiantes de posgrado', 'Profesional', 'Otros']);
-
+            $table->boolean('aprobado')->default(false);
             // Definir la clave foránea para el ID del usuario
             $table->foreign('usuario_id')->references('id')->on('users')->onDelete('cascade');
 

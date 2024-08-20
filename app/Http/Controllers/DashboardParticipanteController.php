@@ -60,13 +60,51 @@ class DashboardParticipanteController extends Controller
     public function cursosRegistrados()
     {
         if (!Auth::check()) {
-            return redirect()->route('login'); // Redirige a la página de inicio de sesión si no está autenticado
+            return redirect()->route('login'); 
         }
 
         $user = Auth::user();
-        $cursos = $user->registros()->with('curso.capacitador')->get()->pluck('curso');
+        // Filtra los cursos para obtener solo aquellos que no han sido finalizados
+        $cursos = $user->registros()
+            ->whereHas('curso', function($query) {
+                $query->where('finalizado', false);
+            })
+            ->with('curso.capacitador')
+            ->get()
+            ->pluck('curso');
 
         return view('cursos.registrados', compact('cursos'));
+    }
+
+    public function cursosFinalizados()
+    {
+        if (!Auth::check()) {
+            return redirect()->route('login'); 
+        }
+
+        $user = Auth::user();
+
+        // Obtener los cursos finalizados y aprobados por el usuario
+        $cursos = Registro::where('usuario_id', $user->id)
+            ->where('aprobado', true)
+            ->whereHas('curso', function ($query) {
+                $query->where('finalizado', true);
+            })
+            ->where(function ($query) use ($user) {
+                $query->whereHas('curso', function ($subQuery) {
+                    $subQuery->where('precio', 0); // Cursos gratuitos
+                })->orWhereHas('curso', function ($subQuery) use ($user) {
+                    $subQuery->whereHas('pagos', function ($paymentQuery) use ($user) {
+                        $paymentQuery->where('usuario_id', $user->id)
+                            ->where('verificado', true); // Cursos de pago con pago verificado
+                    });
+                });
+            })
+            ->with('curso.capacitador')
+            ->get()
+            ->pluck('curso');
+
+        return view('cursos.finalizados', compact('cursos'));
     }
 
 }

@@ -17,62 +17,64 @@
         margin-bottom: 30px;
         text-align: center;
     }
-
     .header h1 {
         margin-bottom: 15px;
         font-size: 2.8em;
         font-weight: bold;
     }
-
     .header p {
         font-size: 1.2em;
         margin-bottom: 0;
     }
-
     .carousel-container {
         width: 100%;
+        overflow: hidden;
+        position: relative;
     }
-
+    .carousel-inner {
+        display: flex;
+        transition: transform 0.5s ease-in-out;
+    }
+    .carousel-item {
+        flex: 0 0 auto;
+        width: 100%;
+        padding: 10px;
+        box-sizing: border-box;
+    }
     .card {
         border: none;
         border-radius: 15px;
         overflow: hidden;
         transition: transform 0.3s, box-shadow 0.3s;
-        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         background-color: #fff;
         position: relative;
         margin-bottom: 20px;
     }
-
     .card:hover {
         transform: scale(1.02);
-        box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
     }
-
     .card img {
         width: 100%;
         height: auto;
         object-fit: cover;
         object-position: center;
     }
-
     .card-body {
         padding: 20px;
         text-align: center;
     }
-
     .card-title {
         font-size: 1.5em;
         margin-bottom: 10px;
         font-weight: bold;
     }
-
     .card-text {
         color: #6c757d;
         font-size: 1em;
         margin-bottom: 15px;
     }
-
     .btn-info {
         background-color: #2b80e8;
         border: none;
@@ -83,11 +85,9 @@
         text-transform: uppercase;
         font-weight: bold;
     }
-
     .btn-info:hover {
         background-color: #4264f0;
     }
-
     .free-label {
         position: absolute;
         top: 15px;
@@ -100,17 +100,9 @@
         font-weight: bold;
         z-index: 1;
     }
-
-    .carousel-item {
-        display: flex;
-        justify-content: center;
-        padding: 10px;
-    }
-
     .carousel-control-prev, .carousel-control-next {
-        filter: invert(1);
+        width: 5%;
     }
-
     .carousel-control-prev-icon, .carousel-control-next-icon {
         background-color: rgba(0, 0, 0, 0.5);
         border-radius: 50%;
@@ -170,4 +162,36 @@
         @endif
     </div>
 </div>
+
+@section('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const prevButton = document.querySelector('.carousel-control-prev');
+        const nextButton = document.querySelector('.carousel-control-next');
+        const carouselInner = document.querySelector('#cursosCarousel .carousel-inner');
+        
+        prevButton.addEventListener('click', function() {
+            const activeItem = carouselInner.querySelector('.carousel-item.active');
+            let prevItem = activeItem.previousElementSibling;
+            if (!prevItem) {
+                prevItem = carouselInner.lastElementChild;
+            }
+            carouselInner.style.transform = 'translateX(-' + prevItem.offsetLeft + 'px)';
+            activeItem.classList.remove('active');
+            prevItem.classList.add('active');
+        });
+        
+        nextButton.addEventListener('click', function() {
+            const activeItem = carouselInner.querySelector('.carousel-item.active');
+            let nextItem = activeItem.nextElementSibling;
+            if (!nextItem) {
+                nextItem = carouselInner.firstElementChild;
+            }
+            carouselInner.style.transform = 'translateX(-' + nextItem.offsetLeft + 'px)';
+            activeItem.classList.remove('active');
+            nextItem.classList.add('active');
+        });
+    });
+</script>
+@endsection
 @endsection

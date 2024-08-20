@@ -9,10 +9,8 @@ class Curso extends Model
 {
     use HasFactory;
 
-    // Especifica la tabla asociada al modelo (opcional si la tabla sigue la convención plural del nombre del modelo)
     protected $table = 'cursos';
 
-    // Especifica los atributos que se pueden asignar en masa
     protected $fillable = [
         'nombre',
         'descripcion',
@@ -24,7 +22,9 @@ class Curso extends Model
         'nombre_maestria',
         'image',
         'capacitador_id',
-        'finalizado'
+        'finalizado',
+        'tipo_curso',
+        'coordinador_maestria',
     ];
 
     // Especifica los atributos que deben ser tratados como fechas
@@ -43,5 +43,9 @@ class Curso extends Model
     public function registros()
     {
         return $this->hasMany(Registro::class);
+    }
+    public function pagos()
+    {
+        return $this->hasMany(Pago::class);
     }
 }

@@ -1,19 +1,19 @@
 @extends('adminlte::page')
 
-@section('title', 'Cursos Registrados')
+@section('title', 'Cursos Finalizados')
 
 @section('content_header')
-    <h1>Cursos Registrados</h1>
+    <h1>Cursos Finalizados</h1>
 @stop
 
 @section('content')
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title">Lista de Cursos en los que estás Registrado</h3>
+            <h3 class="card-title">Lista de Cursos en los que haz Aprobado</h3>
         </div>
         <div class="card-body">
             @if($cursos->isEmpty())
-                <p>No estás registrado en ningún curso.</p>
+                <p>No hay datos.</p>
             @else
                 <table class="table table-bordered" id="cursosTable">
                     <thead>
@@ -59,7 +59,6 @@
             @endif
         </div>
     </div>
-
     <div class=" col-lg-6 col-12">
         <div class="small-box bg-primary">
             <a href="{{ route('cursos.todos') }}" class="small-box-footer">Ver Más Cursos <i class="fa fa-arrow-circle-right"></i></a>

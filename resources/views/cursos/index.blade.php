@@ -27,7 +27,7 @@
                         <th>Fecha Fin</th>
                         <th>Precio</th>
                         <th>Horas Académicas</th>
-                        <th>Tipo</th>
+                        <th>Organizado Por</th>
                         <th>Nombre Maestría</th>
                         <th>Imagen</th>
                         <th>Actividades</th> <!-- Nueva columna para las actividades -->
@@ -53,8 +53,10 @@
                 var tipo = $(`#${modalPrefix}_tipo`).val();
                 if (tipo === 'Maestría') {
                     $(`#${modalPrefix}_nombre_maestria_container`).show();
+                    $(`#${modalPrefix}_coordinador_maestria_container`).show();
                 } else {
                     $(`#${modalPrefix}_nombre_maestria_container`).hide();
+                    $(`#${modalPrefix}_coordinador_maestria_container`).hide();
                 }
             }
 
@@ -102,6 +104,7 @@
                         searchable: false
                     }
                 ],
+                
                 language: {
                     url: "https://cdn.datatables.net/plug-ins/1.10.21/i18n/Spanish.json"
                 }
@@ -120,7 +123,9 @@
             window.editCurso = function(id) {
                 $.get("{{ url('cursos') }}/" + id + "/edit", function(data) {
                     $('#editCursoForm').attr('action', "{{ url('cursos') }}/" + id);
+                    $('#edit_coordinador_maestria').val(data.coordinador_maestria);
                     $('#edit_nombre').val(data.nombre);
+                    $('#edit_tipo_curso').val(data.tipo_curso);
                     $('#edit_descripcion').val(data.descripcion);
                     $('#edit_fecha_inicio').val(data.fecha_inicio);
                     $('#edit_fecha_fin').val(data.fecha_fin);
@@ -128,7 +133,7 @@
                     $('#edit_horas_academicas').val(data.horas_academicas);
                     $('#edit_tipo').val(data.tipo);
                     $('#edit_nombre_maestria').val(data.nombre_maestria);
-                    $('#capacitador_dni').val(data.capacitador_dni);
+                    $('#edit_capacitador').val(data.capacitador_id);
 
                     // Mostrar la imagen actual en el modal
                     if (data.image) {

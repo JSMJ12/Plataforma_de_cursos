@@ -12,6 +12,10 @@
                 <form id="createCursoForm" action="{{ route('cursos.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="form-group">
+                        <label for="tipo_curso">Tipo de Evento</label>
+                        <input type="text" name="tipo_curso" id="tipo_curso" class="form-control" placeholder="Curso, Seminario, Otros" required>
+                    </div>                    
+                    <div class="form-group">
                         <label for="nombre">Nombre</label>
                         <input type="text" name="nombre" id="nombre" class="form-control" required>
                     </div>
@@ -36,8 +40,15 @@
                         <input type="number" name="horas_academicas" id="horas_academicas" class="form-control" required>
                     </div>
                     <div id="capacitador_dni_container" class="form-group">
-                        <label for="capacitador_dni">Cédula/Pasaporte del Capacitador</label>
-                        <input type="text" name="capacitador_dni" id="capacitador_dni" class="form-control">
+                        <label for="capacitador_id">Capacitador</label>
+                        <select name="capacitador_dni" id="capacitador_dni" class="form-control" required>
+                            <option value="">Seleccione un capacitador</option>
+                            @foreach($capacitadores as $capacitador)
+                                <option value="{{ $capacitador->id }}">
+                                    {{ $capacitador->full_name }}
+                                </option>
+                            @endforeach
+                        </select>
                     </div>
                     <div class="form-group">
                         <label for="create_tipo">Creado por</label>
@@ -50,6 +61,11 @@
                     <div class="form-group" id="create_nombre_maestria_container" style="display: none;">
                         <label for="create_nombre_maestria">Nombre Maestría</label>
                         <input type="text" name="nombre_maestria" id="create_nombre_maestria" class="form-control">
+                    </div>
+
+                    <div class="form-group" id="create_coordinador_maestria_container" style="display: none;">
+                        <label for="create_coordinador_maestria">Nombre del Cordinador de la Maestría</label>
+                        <input type="text" name="coordinador_maestria" id="create_coordinador_maestria" class="form-control">
                     </div>
 
                     <div class="form-group">

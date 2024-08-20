@@ -16,33 +16,59 @@ class DashboardSecretarioEpsuController extends Controller
     }
     
     public function index()
-    {
-        $pagos = Pago::orderBy('created_at', 'desc')->get();
-        $pagosNoValidados = Pago::where('verificado', false)->count();
-        $montoRecaudado = Pago::where('verificado', true)->sum('monto');
+{
+    $pagos = Pago::orderBy('created_at', 'desc')->get();
+    $pagosNoValidados = Pago::where('verificado', false)->count();
+    $montoRecaudado = Pago::where('verificado', true)->sum('monto');
 
-        // Gráficos de pagos
-        $pagosDiarios = Pago::where('verificado', true)
-            ->whereDate('created_at', Carbon::today())
-            ->count();
-        $fechasDiarias = [Carbon::today()->format('d/m/Y')];
-        
-        $pagosSemanales = Pago::where('verificado', true)
-            ->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])
-            ->count();
-        $fechasSemanales = [Carbon::now()->startOfWeek()->format('d/m/Y'), Carbon::now()->endOfWeek()->format('d/m/Y')];
-        
-        $pagosMensuales = Pago::where('verificado', true)
-            ->whereMonth('created_at', Carbon::now()->month)
-            ->count();
-        $fechasMensuales = [Carbon::now()->startOfMonth()->format('d/m/Y'), Carbon::now()->endOfMonth()->format('d/m/Y')];
-        
-        $pagosAnuales = Pago::where('verificado', true)
-            ->whereYear('created_at', Carbon::now()->year)
-            ->count();
-        $fechasAnuales = [Carbon::now()->startOfYear()->format('d/m/Y'), Carbon::now()->endOfYear()->format('d/m/Y')];
+    // Gráficos de pagos
 
-        return view('dashboard.secretario_epsu', compact('pagos', 'pagosNoValidados', 'montoRecaudado', 'pagosDiarios', 'pagosSemanales', 'pagosMensuales', 'pagosAnuales', 'fechasDiarias', 'fechasSemanales', 'fechasMensuales', 'fechasAnuales'));
-    }  
+    // Pagos diarios (últimos 7 días)
+    $pagosDiarios = [];
+    $fechasDiarias = [];
+    for ($i = 6; $i >= 0; $i--) {
+        $fecha = Carbon::today()->subDays($i);
+        $pagosDiarios[] = Pago::where('verificado', true)
+            ->whereDate('created_at', $fecha)
+            ->sum('monto');
+        $fechasDiarias[] = $fecha->format('d/m/Y');
+    }
+
+    // Pagos mensuales (últimos 12 meses)
+    $pagosMensuales = [];
+    $fechasMensuales = [];
+    for ($i = 11; $i >= 0; $i--) {
+        $fecha = Carbon::now()->subMonths($i);
+        $pagosMensuales[] = Pago::where('verificado', true)
+            ->whereMonth('created_at', $fecha->month)
+            ->whereYear('created_at', $fecha->year)
+            ->sum('monto');
+        $fechasMensuales[] = $fecha->format('m/Y');
+    }
+
+    // Pagos anuales (últimos 5 años)
+    $pagosAnuales = [];
+    $fechasAnuales = [];
+    for ($i = 4; $i >= 0; $i--) {
+        $fecha = Carbon::now()->subYears($i);
+        $pagosAnuales[] = Pago::where('verificado', true)
+            ->whereYear('created_at', $fecha->year)
+            ->sum('monto');
+        $fechasAnuales[] = $fecha->format('Y');
+    }
+
+    return view('dashboard.secretario_epsu', compact(
+        'pagos', 
+        'pagosNoValidados', 
+        'montoRecaudado', 
+        'pagosDiarios', 
+        'pagosMensuales', 
+        'pagosAnuales', 
+        'fechasDiarias', 
+        'fechasMensuales', 
+        'fechasAnuales'
+    ));
+}
+
 
 }

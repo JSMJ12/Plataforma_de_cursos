@@ -319,16 +319,20 @@ return [
         [
             'text' => 'Cursos',
             'route'  => 'cursos.index',
-            'icon' => 'fas fa-chalkboard-teacher', // Icono para representar cursos
+            'icon' => 'fas fa-chalkboard-teacher', 
             'can' => ['gestionar todos los aspectos', 'gestionar cursos y asistencia']
         ],
         
         [
             'text' => 'Cursos Registrados',
             'route'  => 'cursos.registrados',
-            'icon' => 'fas fa-clipboard-list', // Icono para representar una lista de cursos registrados
+            'icon' => 'fas fa-clipboard-list', 
         ],
-        
+        [
+            'text' => 'Cursos Finalizados',
+            'route'  => 'cursos.finalizados',
+            'icon' => 'fas fa-graduation-cap', 
+        ]        
 
 
     ],

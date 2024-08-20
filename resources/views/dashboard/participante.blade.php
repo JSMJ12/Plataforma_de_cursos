@@ -58,7 +58,7 @@
                         <div class="icon">
                             <i class="fa fa-graduation-cap"></i>
                         </div>
-                        <a href="{{ route('cursos.registrados') }}" class="small-box-footer">Más info <i class="fa fa-arrow-circle-right"></i></a>
+                        <a href="{{ route('cursos.finalizados') }}" class="small-box-footer">Más info <i class="fa fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
 
