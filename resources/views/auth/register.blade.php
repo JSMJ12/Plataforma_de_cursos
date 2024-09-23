@@ -1,6 +1,6 @@
 @extends('layouts.app')
 <title>Registro</title>
-
+<link href="{{ asset('css/style_register.css') }}" rel="stylesheet">
 @section('content')
     <div class="container">
         <div class="row justify-content-center">
@@ -25,12 +25,15 @@
                                     </div>
 
                                     <div class="form-group">
-                                        <label for="role">Rol:</label>
+                                        <label for="role">Roles</label>
                                         <select name="role" id="role" class="form-control" required>
-                                            <option value="" disabled selected>Selecciona un rol</option>
                                             <option value="Capacitador">Capacitador</option>
                                             <option value="Participante">Participante</option>
+                                            <option value="Graduados">Graduada/o</option>
                                         </select>
+                                        @error('role')
+                                            <div class="text-danger">{{ $message }}</div>
+                                        @enderror
                                     </div>
                     
                                     <div class="form-group">
@@ -162,106 +165,51 @@
                                     </select>
                                 </div>
                             </div>
-                    
-                            <button type="submit" class="btn btn-primary">Registrar</button>
+
+                            <!-- Botón de envío -->
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-primary">Registrar</button>
+                            </div>
                         </form>
                     </div>
-                    
                 </div>
             </div>
         </div>
     </div>
-@stop
 
-<style>
-    #imagePreview {
-        width: 200px;
-        height: 200px;
-        border: 1px solid #ccc;
-        margin-top: 10px;
-        background-size: cover;
-        background-position: center;
-    }
+@endsection
 
-    body {
-        background: url('https://i.pinimg.com/originals/29/a7/c4/29a7c42277c305a04f33ebedae44a420.jpg') no-repeat center center fixed;
-        background-size: cover;
-    }
+@section('js')
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const roleField = document.getElementById('role');
+            const capacitadorFields = document.getElementById('capacitadorFields');
+            const participanteFields = document.getElementById('participanteFields');
+            const graduadoFields = document.getElementById('graduadoFields');
 
-    .header {
-        text-align: center;
-        margin-top: 10px;
-    }
+            roleField.addEventListener('change', function () {
+                const selectedRole = this.value;
+                capacitadorFields.style.display = selectedRole === 'Capacitador' ? 'block' : 'none';
+                participanteFields.style.display = selectedRole === 'Participante' ? 'block' : 'none';
+                graduadoFields.style.display = selectedRole === 'Graduado' ? 'block' : 'none';
+            });
 
-    .logo {
-        width: 74px;
-        height: 80px;
-        position: absolute;
-        top: 10px;
-        left: 10px;
-    }
-
-    .seal {
-        width: 150px;
-        height: 93px;
-        position: absolute;
-        top: 20px;
-        right: 10px;
-    }
-
-    .university-name {
-        font-size: 14pt;
-        font-weight: bold;
-    }
-
-    .institute {
-        font-size: 10pt;
-    }
-
-    .divider {
-        width: 100%;
-        height: 2px;
-        background-color: #000;
-        margin: 10px 0;
-    }
-
-    .custom-select-wrapper {
-        position: relative;
-        display: inline-block;
-        width: 100%;
-    }
-
-    .custom-select {
-        display: block;
-        width: 100%;
-        padding: 0.375rem 2.25rem 0.375rem 0.75rem;
-        line-height: 1.5;
-        color: #495057;
-        background-color: #fff;
-        background-clip: padding-box;
-        border: 1px solid #ced4da;
-        border-radius: 0.25rem;
-        transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-    }
-
-    .custom-select:disabled {
-        background-color: #e9ecef;
-    }
-
-    .custom-select::-ms-expand {
-        background-color: transparent;
-        border: 0;
-    }
-
-    .custom-select-wrapper::after {
-        content: '\25BC';
-        position: absolute;
-        top: 50%;
-        right: 0.75rem;
-        transform: translateY(-50%);
-        pointer-events: none;
-    }
-</style>
+            document.getElementById('image').addEventListener('change', function () {
+                const imagePreview = document.getElementById('imagePreview');
+                const file = this.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        imagePreview.style.backgroundImage = `url(${e.target.result})`;
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    imagePreview.style.backgroundImage = '';
+                }
+            });
+        });
+    </script>
+@endsection
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
@@ -283,38 +231,7 @@
         });
     });
 </script>
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const passwordInput = document.querySelector('input[name="password"]');
-        const message = document.createElement('p');
-        message.classList.add('text-muted');
-        passwordInput.parentElement.appendChild(message);
-    
-        passwordInput.addEventListener('input', function () {
-            const value = passwordInput.value;
-            let suggestions = [];
-    
-            if (value.length < 8) {
-                suggestions.push('Debe tener al menos 8 caracteres.');
-            }
-            if (!/[A-Z]/.test(value)) {
-                suggestions.push('Debe tener al menos una letra mayúscula.');
-            }
-            if (!/[a-z]/.test(value)) {
-                suggestions.push('Debe tener al menos una letra minúscula.');
-            }
-            if (!/[0-9]/.test(value)) {
-                suggestions.push('Debe tener al menos un número.');
-            }
-            if (!/[!@#$%^&*(),.?":{}|<>]/.test(value)) {
-                suggestions.push('Debe tener al menos un carácter especial.');
-            }
-    
-            message.textContent = suggestions.length > 0 ? suggestions.join(' ') : 'Contraseña segura.';
-            message.style.color = suggestions.length > 0 ? 'red' : 'green';
-        });
-    });
-    </script>
+
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const roleSelect = document.getElementById('role');
@@ -334,7 +251,7 @@
                 }
             });
         });
-        </script>
+    </script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
     const fileInput = document.getElementById('image');

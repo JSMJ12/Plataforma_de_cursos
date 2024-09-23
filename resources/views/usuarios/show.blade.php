@@ -14,7 +14,8 @@
             </div>
             <div class="card-body text-center">
                 <div class="mb-4 text-center">
-                    <img src="{{ asset('storage/' . $user->image) }}" alt="Imagen de {{ $user->name }}" style="width: 200px; height: 200px; border-radius: 5px;">
+                    <img src="{{ asset('storage/' . $user->image) }}" alt="Imagen de {{ $user->name }}"
+                        style="width: 200px; height: 200px; border-radius: 5px;">
                 </div>
                 <div class="table-responsive">
                     <table class="table table-bordered">
@@ -95,6 +96,42 @@
                                 <tr>
                                     <th>Intereses</th>
                                     <td>{{ $user->interes }}</td>
+                                </tr>
+                            @endif
+                            @if ($user->programa_maestria)
+                                <tr>
+                                    <th>Graduado de:</th>
+                                    <td>{{ $user->programa_maestria }}</td>
+                                </tr>
+                            @endif
+                            @if ($user->fecha_graduacion)
+                                <tr>
+                                    <th>Graduado en:</th>
+                                    <td>{{ $user->fecha_graduacion }}</td>
+                                </tr>
+                            @endif
+                            @if ($user->empleado_actualmente)
+                                <tr>
+                                    <th>Trabaja</th>
+                                    <td>{{ $user->empleado_actualmente }}</td>
+                                </tr>
+                            @endif
+                            @if ($user->nombre_empresa)
+                                <tr>
+                                    <th>Nombre de la EMpresa</th>
+                                    <td>{{ $user->nombre_empresa }}</td>
+                                </tr>
+                            @endif
+                            @if ($user->trabajo_vinculado)
+                                <tr>
+                                    <th>Trabajo Vinculado</th>
+                                    <td>{{ $user->trabajo_vinculado }}</td>
+                                </tr>
+                            @endif
+                            @if ($user->satisfaccion_programa)
+                                <tr>
+                                    <th>Satisfecho</th>
+                                    <td>{{ $user->satisfaccion_programa }}</td>
                                 </tr>
                             @endif
                         </tbody>

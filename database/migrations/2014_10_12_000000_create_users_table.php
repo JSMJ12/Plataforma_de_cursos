@@ -36,6 +36,41 @@ return new class extends Migration
             $table->boolean('permiso_curso')->default(false);
             // Campos específicos para Participantes
             $table->string('interes')->nullable();
+            //Campos Para Graduados
+            // Campos personales graduados
+            $table->string('programa_maestria')->nullable();
+            $table->string('fecha_graduacion')->nullable();
+            // Datos laborales
+            $table->string('empleado_actualmente')->nullable();
+            $table->string('nombre_empresa')->nullable();
+            $table->string('cargo_actual')->nullable();
+            $table->string('trabajo_vinculado')->nullable();
+            $table->string('anos_experiencia_laboral')->nullable();
+            $table->string('empleos_desde_graduacion')->nullable();
+            $table->string('cv')->nullable();
+            
+            // Desarrollo profesional
+            $table->string('estudios_adicionales')->nullable();
+            $table->string('desarrollo_profesional_continuo')->nullable();
+            
+            // Evaluación del programa
+            $table->string('pertinencia_formacion')->nullable();
+            $table->integer('satisfaccion_programa')->nullable();
+            $table->text('aspectos_utiles')->nullable();
+            $table->text('aspectos_mejorables')->nullable();
+            $table->string('actividades_investigacion')->nullable();
+            $table->string('recomendar_programa')->nullable();
+            
+            // Capacitación continua
+            $table->string('interes_capacitacion_continua')->nullable();
+            $table->text('temas_interes')->nullable();
+            
+            // Competencias y habilidades
+            $table->string('resolucion_de_problemas')->nullable();
+            $table->string('comunicacion_oral')->nullable();
+            $table->string('analisis')->nullable();
+            $table->string('creatividad')->nullable();
+            $table->string('trabajo_en_equipo')->nullable();
 
             $table->timestamps();
         });

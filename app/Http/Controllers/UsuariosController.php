@@ -18,7 +18,7 @@ class UsuariosController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $users = User::all(); // Puedes usar ::with('roles') si tienes una relación personalizada
+            $users = User::all(); 
 
             return DataTables::of($users)
                 ->addColumn('actions', function ($user) {
@@ -29,7 +29,7 @@ class UsuariosController extends Controller
                     return $btn;
                 })
                 ->addColumn('roles', function ($user) {
-                    return $user->getRoleNames()->implode(', '); // Usa Spatie para obtener los nombres de los roles
+                    return $user->getRoleNames()->implode(', ');
                 })
                 ->rawColumns(['actions'])
                 ->make(true);
@@ -37,7 +37,6 @@ class UsuariosController extends Controller
 
         return view('usuarios.index');
     }
-
 
     public function accept($id)
     {
@@ -127,8 +126,8 @@ class UsuariosController extends Controller
             'sexo' => 'string|max:1|nullable',
             'interes' => 'string|max:255|nullable',
             'password' => 'required|string|min:8|confirmed',
-            'role' => 'required|string|in:Capacitador,Participante,Administrador,Secretaria',
-            'image' => 'image|mimes:jpeg,png,jpg,gif|max:2048|nullable', // Validación de imagen
+            'role' => 'required|string|in:Capacitador,Participante,Administrador,Secretaria,Graduados',
+            'image' => 'image|mimes:jpeg,png,jpg,gif|max:2048|nullable',
         ]);
 
         // Manejo del archivo de imagen

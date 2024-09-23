@@ -6,6 +6,8 @@ use App\Http\Controllers\DashboardCapacitadorController;
 use App\Http\Controllers\DashboardAdministradorController;
 use App\Http\Controllers\DashboardParticipanteController;
 use App\Http\Controllers\DashboardSecretarioEpsuController;
+use App\Http\Controllers\DashboardGraduadoController;
+use App\Http\Controllers\DashboardEmpresaController;
 use App\Http\Controllers\UsuariosController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\CursoController;
@@ -14,6 +16,10 @@ use App\Http\Controllers\RegistroController;
 use App\Http\Controllers\PagoController;
 use App\Http\Controllers\AsistenciaController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\GraduadosController;
+use App\Http\Controllers\TrabajoController;
+use App\Http\Controllers\EmpresaController;
+use App\Http\Controllers\PostulacionController;
 
 
 /*
@@ -42,6 +48,9 @@ Route::get('/dashboard/capacitador', [DashboardCapacitadorController::class, 'in
 Route::get('/dashboard/admin', [DashboardAdministradorController::class, 'index'])->middleware('can:gestionar todos los aspectos')->name('dashboard_admin');
 Route::get('/dashboard/participante', [DashboardParticipanteController::class, 'index'])->middleware('can:ver cursos y asistencia')->name('dashboard_participante');
 Route::get('/dashboard/EPSU', [DashboardSecretarioEpsuController::class, 'index'])->middleware('can:control de cursos y pagos')->name('dashboard_secretario_epsu');
+Route::get('/dashboard/graduado', [DashboardGraduadoController::class, 'index'])->middleware('can:graduados')->name('dashboard_graduado');
+Route::get('/dashboard/empresa', [DashboardEmpresaController::class, 'index'])->middleware('can:empresa')->name('dashboard_empresa');
+
 Route::get('/inicio', [InicioController::class, 'redireccionarDashboard'])->name('inicio');
 
 
@@ -51,6 +60,7 @@ Route::post('/usuarios/store', [UsuariosController::class, 'store'])->name('usua
 Route::get('/usuarios/create/administrador', [UsuariosController::class, 'create_administrador'])->name('usuarios.create.administrador');
 
 Route::get('/dashboard/admin/capacitadores', [DashboardAdministradorController::class, 'usuarios_capacitadores'])->middleware('can:gestionar todos los aspectos')->name('usuarios.capacitadores');
+Route::get('/dashboard/admin/graduados', [DashboardAdministradorController::class, 'usuarios_graduados'])->middleware('can:gestionar todos los aspectos')->name('usuarios.graduados');
 
 Route::get('usuarios/accept/{id}', [UsuariosController::class, 'accept'])->name('usuarios.accept');
 Route::post('usuarios/changePermission/{id}', [UsuariosController::class, 'changePermission'])->name('usuarios.changePermission');
@@ -77,8 +87,9 @@ Route::get('itinerarios/data/{cursoId}', [ItinerarioController::class, 'getItine
 Route::resource('registro', RegistroController::class);
 Route::post('/aprobacion', [RegistroController::class, 'aprobarCurso'])->name('aprobacion');
 
-
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+//Actalizar datos graduados
+Route::get('/graduados/actualizar_datos/{id?}', [GraduadosController::class, 'edit1'])->name('graduados.edit1');
+Route::resource('graduados', GraduadosController::class);
 
 //pagos
 Route::resource('pagos', PagoController::class);
@@ -90,3 +101,11 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/asistencias', [AsistenciaController::class, 'store'])->name('asistencias.store');
 });
 
+// Empresas
+Route::resource('empresas', EmpresaController::class);
+
+// Trabajos
+Route::resource('trabajos', TrabajoController::class);
+
+// Postulaciones
+Route::resource('postulaciones', PostulacionController::class)->middleware('auth');

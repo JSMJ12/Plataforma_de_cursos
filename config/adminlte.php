@@ -317,6 +317,18 @@ return [
             'can' => 'gestionar todos los aspectos'
         ],
         [
+            'text' => 'Graduados',
+            'route'  => 'usuarios.graduados',
+            'icon' => 'fa fa-graduation-cap', 
+            'can' => 'gestionar todos los aspectos'
+        ],
+        [
+            'text' => 'Actualizar Datos',
+            'route'  => 'graduados.edit1',
+            'icon' => 'fa fa-pencil-alt', 
+            'can' => 'graduados'
+        ],        
+        [
             'text' => 'Cursos',
             'route'  => 'cursos.index',
             'icon' => 'fas fa-chalkboard-teacher', 
@@ -332,8 +344,13 @@ return [
             'text' => 'Cursos Finalizados',
             'route'  => 'cursos.finalizados',
             'icon' => 'fas fa-graduation-cap', 
-        ]        
-
+        ],    
+        [
+            'text' => 'Empresas',
+            'route'  => 'empresas.index',
+            'icon' => 'fas fa-building',
+            'can' => ['gestionar todos los aspectos']
+        ],          
 
     ],
 

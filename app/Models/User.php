@@ -49,6 +49,30 @@ class User extends Authenticatable
         'password',
         'sexo',
         'interes',
+        'programa_maestria',
+        'fecha_graduacion',
+        'empleado_actualmente',
+        'nombre_empresa',
+        'cargo_actual',
+        'trabajo_vinculado',
+        'anos_experiencia_laboral',
+        'empleos_desde_graduacion',
+        'estudios_adicionales',
+        'desarrollo_profesional_continuo',
+        'pertinencia_formacion',
+        'satisfaccion_programa',
+        'aspectos_utiles',
+        'aspectos_mejorables',
+        'actividades_investigacion',
+        'recomendar_programa',
+        'interes_capacitacion_continua',
+        'temas_interes',
+        'resolucion_de_problemas',
+        'comunicacion_oral',
+        'analisis',
+        'creatividad',
+        'trabajo_en_equipo',
+        'cv'
     ];
 
     /**
@@ -118,5 +142,10 @@ class User extends Authenticatable
     public function pagos()
     {
         return $this->hasMany(Pago::class, 'usuario_id');
+    }
+
+    public function postulaciones()
+    {
+        return $this->hasMany(Postulacion::class);
     }
 }

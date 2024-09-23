@@ -19,6 +19,8 @@ class RolesAndPermissionsSeeder extends Seeder
             'Capacitador' => 'gestionar cursos y asistencia',
             'Participante' => 'ver cursos y asistencia',
             'Secretaria' => 'control de cursos y pagos',
+            'Graduados' => 'graduados',
+            'Empresa' => 'empresa',
         ];
 
         foreach ($permissions as $roleName => $permissionName) {
