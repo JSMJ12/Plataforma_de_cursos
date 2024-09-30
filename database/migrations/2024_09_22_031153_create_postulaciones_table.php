@@ -12,7 +12,6 @@ class CreatePostulacionesTable extends Migration
             $table->id();
             $table->foreignId('trabajo_id')->constrained('trabajos')->onDelete('cascade'); // Relación con trabajo
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade'); // Relación con usuario (graduado)
-            $table->string('cv')->nullable(); // CV del usuario (relacionado con el campo 'cv' en users)
             $table->string('estado')->default('pendiente'); // Estado de la postulación (pendiente, aceptado, rechazado)
             $table->timestamps();
         });

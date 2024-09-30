@@ -146,6 +146,11 @@ class User extends Authenticatable
 
     public function postulaciones()
     {
-        return $this->hasMany(Postulacion::class);
+        return $this->hasMany(Postulacion::class, 'user_id');
+    }
+
+    public function empresas()
+    {
+        return $this->hasMany(Empresa::class, 'user_id');
     }
 }

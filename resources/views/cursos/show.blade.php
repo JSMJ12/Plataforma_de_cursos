@@ -29,14 +29,12 @@
                             </button>
                         @endif
                     @elseif($paymentCompleted)
-                        <!-- Mostrar botón de registro si el curso tiene costo y el pago ha sido completado -->
                         @if(!$userRegistered)
                             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#registroModal">
                                 Registrarse
                             </button>
                         @endif
                     @else
-                        <!-- Mostrar botón de pago si el curso tiene costo y el pago no ha sido completado -->
                         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#pagoModal">
                             Realizar Pago
                         </button>

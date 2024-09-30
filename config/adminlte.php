@@ -316,10 +316,17 @@ return [
             'icon' => 'fa fa-chalkboard-teacher',
             'can' => 'gestionar todos los aspectos'
         ],
+
         [
             'text' => 'Graduados',
             'route'  => 'usuarios.graduados',
             'icon' => 'fa fa-graduation-cap', 
+            'can' => 'gestionar todos los aspectos'
+        ],
+        [
+            'text' => 'Secretarios',
+            'route'  => 'usuarios.secretarios',
+            'icon' => 'fa fa-user-tie',
             'can' => 'gestionar todos los aspectos'
         ],
         [
@@ -334,7 +341,30 @@ return [
             'icon' => 'fas fa-chalkboard-teacher', 
             'can' => ['gestionar todos los aspectos', 'gestionar cursos y asistencia']
         ],
-        
+        [
+            'text' => 'Empresas',
+            'route'  => 'empresas.index',
+            'icon' => 'fas fa-building',
+            'can' => ['gestionar todos los aspectos']
+        ],
+        [
+            'text' => 'Trabajos',
+            'route'  => 'trabajos.index',
+            'icon' => 'fas fa-briefcase', 
+            'can' => ['empresa']
+        ], 
+        [
+            'text' => 'Empleos',
+            'route'  => 'trabajos_todos',
+            'icon' => 'fas fa-briefcase', 
+            'can' => ['graduados']
+        ],
+        [
+            'text' => 'Postulaciones',
+            'route'  => 'postulaciones.index',
+            'icon' => 'fas fa-file-alt', 
+            'can' => ['graduados']
+        ],        
         [
             'text' => 'Cursos Registrados',
             'route'  => 'cursos.registrados',
@@ -344,13 +374,7 @@ return [
             'text' => 'Cursos Finalizados',
             'route'  => 'cursos.finalizados',
             'icon' => 'fas fa-graduation-cap', 
-        ],    
-        [
-            'text' => 'Empresas',
-            'route'  => 'empresas.index',
-            'icon' => 'fas fa-building',
-            'can' => ['gestionar todos los aspectos']
-        ],          
+        ],             
 
     ],
 
@@ -395,22 +419,22 @@ return [
                 [
                     'type' => 'js',
                     'asset' => false,
-                    'location' => '//cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js',
+                    'location' => 'https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js',
                 ],
                 [
                     'type' => 'js',
                     'asset' => false,
-                    'location' => '//cdn.datatables.net/1.13.7/js/dataTables.bootstrap4.min.js',
+                    'location' => 'https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap4.min.js',
                 ],
                 [
                     'type' => 'css',
                     'asset' => false,
-                    'location' => '//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css',
+                    'location' => 'https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css',
                 ],
                 [
                     'type' => 'css',
                     'asset' => false,
-                    'location' => '//cdn.datatables.net/1.13.7/css/dataTables.bootstrap4.min.css',
+                    'location' => 'https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap4.min.css',
                 ],
             ],
         ],

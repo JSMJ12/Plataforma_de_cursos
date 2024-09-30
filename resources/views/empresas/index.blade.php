@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Lista de Usuarios')
+@section('title', 'Lista de Empresas')
 
 @section('content_header')
     <h1>Empresas</h1>
@@ -14,44 +14,41 @@
         </div>
 
         <div class="card-body table-responsive">
-            <table id="usuariosTable" class="table table-bordered table-striped">
+            <table id="empresasTable" class="table table-bordered table-striped">
                 <thead>
                     <tr>
                         <th>Nombre</th>
+                        <th>Dirección</th>
                         <th>Teléfono</th>
                         <th>Email</th>
                         <th>Logo</th>
-                        <th>Acciones</th>
+                        <th>Encargado</th> <!-- Nueva columna para el encargado -->
                     </tr>
                 </thead>
-                <tbody>
-                    @foreach ($empresas as $empresa)
-                        <tr>
-                            <td>{{ $empresa->nombre }}</td>
-                            <td>{{ $empresa->telefono }}</td>
-                            <td>{{ $empresa->email }}</td>
-                            <td>
-                                @if ($empresa->logo)
-                                    <img src="{{ asset('storage/' . $empresa->logo) }}" alt="Logo" width="50">
-                                @else
-                                    No tiene logo
-                                @endif
-                            </td>
-                            <td>
-                                <a href="{{ route('empresas.show', $empresa->id) }}" class="btn btn-info btn-sm">Ver</a>
-                                <a href="{{ route('empresas.edit', $empresa->id) }}"
-                                    class="btn btn-warning btn-sm">Editar</a>
-                                <form action="{{ route('empresas.destroy', $empresa->id) }}" method="POST"
-                                    style="display: inline-block;">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
-                                </form>
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
             </table>
         </div>
     </div>
+@endsection
+
+@section('js')
+    <script>
+        $(document).ready(function() {
+            $('#empresasTable').DataTable({
+                processing: true,
+                serverSide: true,
+                ajax: '{{ route('empresas.index') }}',
+                columns: [
+                    { data: 'nombre', name: 'nombre' },
+                    { data: 'direccion', name: 'direccion' },
+                    { data: 'telefono', name: 'telefono' },
+                    { data: 'email', name: 'email' },
+                    { data: 'logo', name: 'logo', orderable: false, searchable: false },
+                    { data: 'usuario', name: 'usuario', orderable: false, searchable: false } 
+                ],
+                language: {
+                    url: "https://cdn.datatables.net/plug-ins/1.10.21/i18n/Spanish.json"
+                }
+            });
+        });
+    </script>
 @endsection

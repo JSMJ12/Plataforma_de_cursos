@@ -10,11 +10,16 @@ class Empresa extends Model
     use HasFactory;
 
     // Definir los atributos que se pueden asignar masivamente
-    protected $fillable = ['nombre', 'direccion', 'telefono', 'email', 'sitio_web', 'logo'];
+    protected $fillable = ['user_id', 'nombre', 'direccion', 'telefono', 'email', 'sitio_web', 'logo'];
 
     // Relación con los trabajos (Una empresa tiene muchos trabajos)
     public function trabajos()
     {
         return $this->hasMany(Trabajo::class);
+    }
+
+    public function usuario()
+    {
+        return $this->belongsTo(User::class, 'user_id');
     }
 }

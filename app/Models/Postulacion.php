@@ -9,6 +9,9 @@ class Postulacion extends Model
 {
     use HasFactory;
 
+    // Definir la tabla asociada
+    protected $table = 'postulaciones';
+
     // Definir los atributos que se pueden asignar masivamente
     protected $fillable = ['user_id', 'trabajo_id', 'estado'];
 
@@ -24,3 +27,5 @@ class Postulacion extends Model
         return $this->belongsTo(Trabajo::class);
     }
 }
+
+

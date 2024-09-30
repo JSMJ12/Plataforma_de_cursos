@@ -35,6 +35,7 @@
     @else
         <link rel="stylesheet" href="{{ mix(config('adminlte.laravel_mix_css_path', 'css/app.css')) }}">
     @endif
+    <link href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css" rel="stylesheet">
 
     {{-- Extra Configured Plugins Stylesheets --}}
     @include('adminlte::plugins', ['type' => 'css'])
@@ -93,7 +94,7 @@
 
     {{-- Extra Configured Plugins Scripts --}}
     @include('adminlte::plugins', ['type' => 'js'])
-
+    <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
     {{-- Livewire Script --}}
     @if(config('adminlte.livewire'))
         @if(intval(app()->version()) >= 7)

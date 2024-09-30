@@ -12,7 +12,9 @@ class PostulacionController extends Controller
     // Mostrar todas las postulaciones
     public function index()
     {
-        $postulaciones = Postulacion::with('trabajo')->where('user_id', Auth::id())->get();
+        $user = Auth::user();
+        $postulaciones = Postulacion::where('user_id', $user->id)->with('trabajo.empresa')->get();
+
         return view('postulaciones.index', compact('postulaciones'));
     }
 
@@ -48,16 +50,18 @@ class PostulacionController extends Controller
     }
 
     // Actualizar el estado de una postulación
-    public function update(Request $request, Postulacion $postulacion)
+    public function update(Request $request, $id)
     {
         $request->validate([
             'estado' => 'required|string',
         ]);
 
+        $postulacion = Postulacion::findOrFail($id);
         $postulacion->update($request->only('estado'));
 
-        return redirect()->back()->with('success', 'Estado de la postulación actualizado');
+        return response()->json(['success' => 'Estado de la postulación actualizado']);
     }
+
 
     // Eliminar una postulación
     public function destroy(Postulacion $postulacion)

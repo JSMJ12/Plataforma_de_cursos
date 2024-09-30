@@ -5,16 +5,61 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Yajra\DataTables\DataTables;
+use Illuminate\Support\Facades\DB;
+
 
 class DashboardAdministradorController extends Controller
 {
     public function index()
     {
+        // Obtener el conteo de usuarios creados por día
+        $usuariosPorDia = User::select(
+            DB::raw('DATE(created_at) as fecha'),
+            DB::raw('count(*) as total')
+        )
+            ->groupBy('fecha')
+            ->orderBy('fecha', 'asc')
+            ->get();
+
+        // Obtener el conteo de usuarios creados por mes
+        $usuariosPorMes = User::select(
+            DB::raw('DATE_FORMAT(created_at, "%Y-%m") as fecha'),
+            DB::raw('count(*) as total')
+        )
+            ->groupBy('fecha')
+            ->orderBy('fecha', 'asc')
+            ->get();
+
+        // Obtener el conteo de usuarios creados por año
+        $usuariosPorAnio = User::select(
+            DB::raw('YEAR(created_at) as fecha'),
+            DB::raw('count(*) as total')
+        )
+            ->groupBy('fecha')
+            ->orderBy('fecha', 'asc')
+            ->get();
+
+        // Convertir a arrays para pasar a la vista
+        $dias = $usuariosPorDia->pluck('fecha')->toArray();
+        $totalesPorDia = $usuariosPorDia->pluck('total')->toArray();
+
+        $meses = $usuariosPorMes->pluck('fecha')->toArray();
+        $totalesPorMes = $usuariosPorMes->pluck('total')->toArray();
+
+        $anios = $usuariosPorAnio->pluck('fecha')->toArray();
+        $totalesPorAnio = $usuariosPorAnio->pluck('total')->toArray();
         $totalUsuarios = User::count();
         $totalUsuariosCapacitadores = User::role('Capacitador')->count();
+        $totalUsuariosGraduados = User::role('Graduados')->count();
+        $totalUsuariosSecretarios = User::role('Secretaria')->count();
+        $totalUsuariosEmpresarios = User::role('Empresa')->count();
         return view(
             'dashboard.administrador',
-            compact('totalUsuarios', 'totalUsuariosCapacitadores')
+            compact('totalUsuarios', 
+            'totalUsuariosCapacitadores', 
+            'totalUsuariosGraduados', 
+            'totalUsuariosSecretarios', 
+            'totalUsuariosEmpresarios', 'dias', 'totalesPorDia', 'meses', 'totalesPorMes', 'anios', 'totalesPorAnio')
         );
     }
 
@@ -44,6 +89,30 @@ class DashboardAdministradorController extends Controller
                 ->make(true);
         }
         return view('capacitadores.index');
+    }
+
+    public function usuarios_secretarios(Request $request)
+    {
+        if ($request->ajax()) {
+            $capacitadores = User::whereHas('roles', function ($query) {
+                $query->where('name', 'Secretario');
+            })
+                ->orWhereDoesntHave('roles')
+                ->get();
+
+            return DataTables::of($capacitadores)
+                ->addColumn('image', function ($user) {
+                    $url = asset('storage/' . $user->image);
+                    return '<img src="' . $url . '" alt="Foto" width="50" height="70"/>';
+                })
+                ->addColumn('actions', function ($user) {
+                    $btn = '<a href="' . route('usuarios.show', $user->id) . '" class="btn btn-info btn-sm">Ver</a> ';
+                    return $btn;
+                })
+                ->rawColumns(['image', 'actions'])
+                ->make(true);
+        }
+        return view('secretarios.index');
     }
 
     public function usuarios_graduados(Request $request)

@@ -17,7 +17,8 @@ class CreateTrabajosTable extends Migration
             $table->string('tipo_contrato'); // Tipo de contrato (temporal, fijo, etc.)
             $table->decimal('salario', 10, 2)->nullable(); // Salario del puesto
             $table->date('fecha_publicacion'); // Fecha de publicación
-            $table->date('fecha_limite'); // Fecha límite para aplicar
+            $table->date('fecha_limite');
+            $table->text('requisitos');
             $table->timestamps();
         });
     }

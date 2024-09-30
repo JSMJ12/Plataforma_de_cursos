@@ -5,10 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
-use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\CapacitadorAccepted;
 use Yajra\DataTables\DataTables; 
@@ -186,6 +185,26 @@ class UsuariosController extends Controller
         }
     }
 
+    public function uploadCV(Request $request)
+    {
+        $request->validate([
+            'cv' => 'required|mimes:pdf,doc,docx|max:2048',
+        ]);
 
+        $user = Auth::user();
+
+        if ($user->cv) {
+            Storage::delete('public/' . $user->cv);
+        }
+
+        $path = $request->file('cv')->store('cvs', 'public');
+
+        $user->cv = $path;
+        $user->save();
+
+        return redirect()->back()->with('success', 'Tu CV ha sido subido correctamente.');
+    }
 }
+
+
 

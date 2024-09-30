@@ -54,25 +54,31 @@ Route::get('/dashboard/empresa', [DashboardEmpresaController::class, 'index'])->
 Route::get('/inicio', [InicioController::class, 'redireccionarDashboard'])->name('inicio');
 
 
-Route::get('/usuarios', [UsuariosController::class, 'index'])->name('usuarios.index');
-Route::get('/usuarios/{id}', [UsuariosController::class, 'show'])->name('usuarios.show');
+Route::get('/usuarios', [UsuariosController::class, 'index'])->middleware('can:gestionar todos los aspectos')->name('usuarios.index');
+Route::get('/usuarios/{id}', [UsuariosController::class, 'show'])->middleware('can:gestionar todos los aspectos')->name('usuarios.show');
 Route::post('/usuarios/store', [UsuariosController::class, 'store'])->name('usuarios.store');
-Route::get('/usuarios/create/administrador', [UsuariosController::class, 'create_administrador'])->name('usuarios.create.administrador');
+Route::get('/usuarios/create/administrador', [UsuariosController::class, 'create_administrador'])->middleware('can:gestionar todos los aspectos')->name('usuarios.create.administrador');
+Route::post('/user/upload-cv', [UsuariosController::class, 'uploadCV'])->name('user.upload.cv')->middleware('auth');
 
 Route::get('/dashboard/admin/capacitadores', [DashboardAdministradorController::class, 'usuarios_capacitadores'])->middleware('can:gestionar todos los aspectos')->name('usuarios.capacitadores');
 Route::get('/dashboard/admin/graduados', [DashboardAdministradorController::class, 'usuarios_graduados'])->middleware('can:gestionar todos los aspectos')->name('usuarios.graduados');
+Route::get('/dashboard/admin/secretarios', [DashboardAdministradorController::class, 'usuarios_secretarios'])->middleware('can:gestionar todos los aspectos')->name('usuarios.secretarios');
 
-Route::get('usuarios/accept/{id}', [UsuariosController::class, 'accept'])->name('usuarios.accept');
-Route::post('usuarios/changePermission/{id}', [UsuariosController::class, 'changePermission'])->name('usuarios.changePermission');
-Route::get('usuarios/revoke-permission/{id}', [UsuariosController::class, 'revokePermission'])->name('usuarios.revokePermission');
-
-Route::get('users/search', [UsuariosController::class, 'searchByDni']);
+Route::get('usuarios/accept/{id}', [UsuariosController::class, 'accept'])->name('usuarios.accept')->middleware('can:gestionar todos los aspectos');
+Route::post('usuarios/changePermission/{id}', [UsuariosController::class, 'changePermission'])->name('usuarios.changePermission')->middleware('can:gestionar todos los aspectos');
+Route::get('usuarios/revoke-permission/{id}', [UsuariosController::class, 'revokePermission'])->name('usuarios.revokePermission')->middleware('can:gestionar todos los aspectos');
 
 //cursos
-Route::resource('cursos', CursoController::class);
-
-Route::put('/cursos/{id}/finalizar', [CursoController::class, 'finalizarCurso'])->name('cursos.finalizar');
-Route::put('/cursos/reactivar/{id}', [CursoController::class, 'reactivar'])->name('cursos.reactivar');
+// Listar todos los cursos
+route::get('/cursos', [CursoController::class, 'index'])->name('cursos.index')->middleware('auth');
+Route::get('/cursos/create', [CursoController::class, 'create'])->name('cursos.create')->middleware('can:gestionar cursos y asistencia');
+Route::post('/cursos', [CursoController::class, 'store'])->name('cursos.store')->middleware('auth');
+Route::get('/cursos/{curso}', [CursoController::class, 'show'])->name('cursos.show');
+Route::get('/cursos/{curso}/edit', [CursoController::class, 'edit'])->name('cursos.edit')->middleware('auth');
+Route::put('/cursos/{curso}', [CursoController::class, 'update'])->name('cursos.update')->middleware('auth');
+Route::delete('/cursos/{curso}', [CursoController::class, 'destroy'])->name('cursos.destroy')->middleware('auth');
+Route::put('/cursos/{id}/finalizar', [CursoController::class, 'finalizarCurso'])->name('cursos.finalizar')->middleware('can:gestionar cursos y asistencia');
+Route::put('/cursos/reactivar/{id}', [CursoController::class, 'reactivar'])->name('cursos.reactivar')->middleware('can:gestionar todos los aspectos');
 
 Route::get('/cursos-registrados', [DashboardParticipanteController::class, 'cursosRegistrados'])->name('cursos.registrados');
 Route::get('/cursos-finalizados', [DashboardParticipanteController::class, 'cursosFinalizados'])->name('cursos.finalizados');
@@ -85,27 +91,33 @@ Route::get('itinerarios/data/{cursoId}', [ItinerarioController::class, 'getItine
 
 //Registros
 Route::resource('registro', RegistroController::class);
-Route::post('/aprobacion', [RegistroController::class, 'aprobarCurso'])->name('aprobacion');
+Route::post('/aprobacion', [RegistroController::class, 'aprobarCurso'])->middleware('can:gestionar cursos y asistencia')->name('aprobacion');
 
 //Actalizar datos graduados
-Route::get('/graduados/actualizar_datos/{id?}', [GraduadosController::class, 'edit1'])->name('graduados.edit1');
-Route::resource('graduados', GraduadosController::class);
+Route::get('/graduados/actualizar_datos/{id?}', [GraduadosController::class, 'edit1'])->name('graduados.edit1')->middleware('auth');
+Route::resource('graduados', GraduadosController::class)->middleware('auth');
 
 //pagos
 Route::resource('pagos', PagoController::class);
-Route::post('/pagos/validar/{pago}', [PagoController::class, 'validar'])->name('pagos.validar');
+Route::post('/pagos/validar/{pago}', [PagoController::class, 'validar'])->name('pagos.validar')->middleware('can:control de cursos y pagos');
 
 //Asistencias
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['can:gestionar cursos y asistencia'])->group(function () {
     Route::get('/asistencias', [AsistenciaController::class, 'index'])->name('asistencias.index');
     Route::post('/asistencias', [AsistenciaController::class, 'store'])->name('asistencias.store');
 });
 
 // Empresas
-Route::resource('empresas', EmpresaController::class);
+
+Route::get('/empresas', [EmpresaController::class, 'index'])->middleware('can:gestionar todos los aspectos')->name('empresas.index');
+Route::get('/empresas/create', [EmpresaController::class, 'create'])->name('empresas.create');
+Route::post('/empresas', [EmpresaController::class, 'store'])->name('empresas.store');
+Route::put('/empresas/{empresa}', [EmpresaController::class, 'update'])->middleware('can:empresa')->name('empresas.update');
+Route::get('/trabajos/{id}/postulaciones', [TrabajoController::class, 'getPostulaciones'])->middleware('can:empresa');
+
 
 // Trabajos
-Route::resource('trabajos', TrabajoController::class);
-
+Route::get('/trabajos/all', [TrabajoController::class, 'trabajos_todos'])->name('trabajos_todos')->middleware('auth');
+Route::resource('trabajos', TrabajoController::class)->middleware('auth');
 // Postulaciones
 Route::resource('postulaciones', PostulacionController::class)->middleware('auth');

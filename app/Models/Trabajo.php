@@ -10,7 +10,7 @@ class Trabajo extends Model
     use HasFactory;
 
     // Definir los atributos que se pueden asignar masivamente
-    protected $fillable = ['titulo', 'descripcion', 'requisitos', 'salario', 'empresa_id'];
+    protected $fillable = ['titulo', 'descripcion', 'requisitos', 'salario', 'empresa_id', 'tipo_contrato', 'ubicacion', 'fecha_publicacion', 'fecha_limite'];
 
     // Relación con la empresa (Un trabajo pertenece a una empresa)
     public function empresa()
@@ -21,7 +21,7 @@ class Trabajo extends Model
     // Relación con postulaciones (Un trabajo tiene muchas postulaciones)
     public function postulaciones()
     {
-        return $this->hasMany(Postulacion::class);
+        return $this->hasMany(Postulacion::class, 'trabajo_id');
     }
 }
 
