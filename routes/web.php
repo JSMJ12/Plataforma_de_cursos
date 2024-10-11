@@ -95,7 +95,12 @@ Route::post('/aprobacion', [RegistroController::class, 'aprobarCurso'])->middlew
 
 //Actalizar datos graduados
 Route::get('/graduados/actualizar_datos/{id?}', [GraduadosController::class, 'edit1'])->name('graduados.edit1')->middleware('auth');
-Route::resource('graduados', GraduadosController::class)->middleware('auth');
+
+Route::get('/registro-graduado', [GraduadosController::class, 'create'])->name('graduados.create1');
+
+Route::post('/registro-graduado/store', [GraduadosController::class, 'store'])->name('graduados.store1');
+
+Route::resource('graduados', GraduadosController::class);
 
 //pagos
 Route::resource('pagos', PagoController::class);

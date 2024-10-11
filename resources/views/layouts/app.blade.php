@@ -54,6 +54,9 @@
                                 <li class="nav-item">
                                     <a class="nav-link" href="{{ route('empresas.create') }}">{{ __('Registrar Empresa') }}</a>
                                 </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ route('graduados.create1') }}">{{ __('Graduados') }}</a>
+                                </li>
                             @endif
                         @else
                             <li class="nav-item dropdown">

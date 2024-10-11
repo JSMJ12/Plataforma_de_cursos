@@ -368,6 +368,26 @@
 
         document.addEventListener('DOMContentLoaded', toggleTemasInput);
     </script>
+    <script src="https://cdn.ckeditor.com/ckeditor5/35.0.1/classic/ckeditor.js"></script>
+    <script>
+        ClassicEditor
+            .create(document.querySelector('#aspectos_utiles'), {
+                language: 'es'
+            })
+            .catch(error => {
+                console.error(error);
+            });
+
+        ClassicEditor
+            .create(document.querySelector('#aspectos_mejorables'), {
+                language: 'es'
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    </script>
+
+
 
     <script>
         function updateRating(value) {
