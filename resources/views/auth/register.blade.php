@@ -31,9 +31,9 @@
                                     <div class="form-group">
                                         <label for="role">Roles</label>
                                         <select name="role" id="role" class="form-control" required>
+                                            <option value="Graduados">Graduada/o</option>
                                             <option value="Capacitador">Capacitador</option>
                                             <option value="Participante">Participante</option>
-                                            <option value="Graduados">Graduada/o</option>
                                         </select>
                                         @error('role')
                                             <div class="text-danger">{{ $message }}</div>

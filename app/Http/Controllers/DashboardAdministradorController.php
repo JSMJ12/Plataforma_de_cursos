@@ -84,6 +84,7 @@ class DashboardAdministradorController extends Controller
                         $btn .= '<a href="' . route('usuarios.accept', $user->id) . '" class="btn btn-primary btn-sm">Aceptar</a> ';
                     }
                     return $btn;
+
                 })
                 ->rawColumns(['image', 'actions'])
                 ->make(true);
