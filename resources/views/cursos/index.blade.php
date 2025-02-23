@@ -8,12 +8,14 @@
 
 @section('content')
     <div class="card">
-        <div class="card-header d-flex justify-content-between">
+        <div class="card-header text-white" style="background-color: #036f1b;">
             <h3 class="card-title">Lista de Cursos</h3>
-            <button class="btn btn-transparent" data-toggle="modal" data-target="#createCursoModal">
-                <i class="fas fa-laptop-code"></i> Crear Curso
-            </button>
-        </div>
+            <div class="card-tools">
+                <button class="btn btn-light text-black" data-toggle="modal" data-target="#createCursoModal">
+                    <i class="fas fa-laptop-code"></i> Crear Curso
+                </button>
+            </div>
+        </div>        
 
         <div class="card-body table-responsive">
             <table id="cursosTable" class="table table-bordered table-striped">

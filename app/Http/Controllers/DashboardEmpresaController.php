@@ -13,7 +13,7 @@ class DashboardEmpresaController extends Controller
         $user = Auth::user();
         
         // Obtener la empresa asociada al usuario logueado
-        $empresa = Empresa::where('user_id', $user->id)->first();
+        $empresa = Empresa::where('user_id', $user->id)->firstOrFail();
 
         // Obtener los trabajos creados por la empresa
         $trabajos = Trabajo::where('empresa_id', $empresa->id)->get();
@@ -28,7 +28,18 @@ class DashboardEmpresaController extends Controller
             $postulacionesRevisadas += $trabajo->postulaciones()->where('estado', 'revisado')->count();
         }
 
+        // Calcular estadísticas adicionales (opcional)
+        $totalTrabajos = $trabajos->count();
+        $totalPostulaciones = $postulacionesPendientes + $postulacionesRevisadas;
+
         // Retornar la vista con los datos
-        return view('dashboard.empresa', compact('empresa', 'trabajos', 'postulacionesPendientes', 'postulacionesRevisadas'));
+        return view('dashboard.empresa', compact(
+            'empresa', 
+            'trabajos', 
+            'postulacionesPendientes', 
+            'postulacionesRevisadas', 
+            'totalTrabajos', 
+            'totalPostulaciones'
+        ));
     }
 }

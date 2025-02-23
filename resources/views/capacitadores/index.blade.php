@@ -8,9 +8,10 @@
 
 @section('content')
     <div class="card">
-        <div class="card-header">
+        <div class="card-header text-white" style="background-color: #036f1b;">
             <h3 class="card-title">Lista de Capacitadores</h3>
         </div>
+       
         <div class="card-body table-responsive">
             <table id="capacitadoresTable" class="table table-bordered table-striped">
                 <thead>

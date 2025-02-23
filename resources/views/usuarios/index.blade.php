@@ -9,13 +9,13 @@
 @section('content')
     
     <div class="card">
-        <div class="card-header d-flex justify-content-between">
-            <h3 class="card-title">Lista de Usuarios</h3>
-            <a href="{{ route('usuarios.create.administrador') }}" class="btn btn-transparent">
-                <i class="fas fa-user-plus"></i> Crear Usuario
-            </a>            
+        <div class="card-header text-white" style="background-color: #036f1b;">
+            <h3 class="card-title">Listado de Usuarios</h3>
+            <div class="card-tools">
+                <a href="{{ route('usuarios.create.administrador') }}" class="btn btn-light btn-sm"><i class="fas fa-plus"></i> Agregar
+                    nuevo</a>
+            </div>
         </div>
-
         <div class="card-body table-responsive">
             <table id="usuariosTable" class="table table-bordered table-striped">
                 <thead>

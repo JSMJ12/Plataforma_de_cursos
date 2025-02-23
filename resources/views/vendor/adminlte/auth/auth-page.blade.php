@@ -1,6 +1,6 @@
 @extends('adminlte::master')
 
-@php( $dashboard_url = View::getSection('dashboard_url') ?? config('adminlte.dashboard_url', 'home') )
+@php( $dashboard_url = View::getSection('login_url') ?? config('adminlte.login_url', 'login'))
 
 @if (config('adminlte.use_route_url', false))
     @php( $dashboard_url = $dashboard_url ? route($dashboard_url) : '' )
@@ -11,6 +11,22 @@
 @section('adminlte_css')
     @stack('css')
     @yield('css')
+    <style>
+        body {
+            margin: 0;
+            font-family: "Nunito", sans-serif;
+            font-size: 0.9rem;
+            font-weight: 400;
+            line-height: 1.6;
+            background-image: url('/images/portada.png');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-position: center center;
+            background-color: #f8fafc;
+            color: #f8fafc;
+        }
+    </style>
 @stop
 
 @section('classes_body'){{ ($auth_type ?? 'login') . '-page' }}@stop

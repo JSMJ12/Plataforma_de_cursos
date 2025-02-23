@@ -1,7 +1,7 @@
 <div class="modal fade" id="editItinerarioModal" tabindex="-1" role="dialog" aria-labelledby="editItinerarioModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <div class="modal-header">
+            <div class="modal-header" style="background-color: #041c48; color: #fff;">
                 <h5 class="modal-title" id="editActivityModalLabel">Editar Actividad</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>

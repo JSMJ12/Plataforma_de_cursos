@@ -4,14 +4,17 @@
 
 @section('content')
     <div class="card">
-        <div class="card-header d-flex justify-content-between">
-            <h3 class="card-title">Actividades del Curso: {{ $curso->nombre }}</h3>
+        <div class="card-header d-flex align-items-center justify-content-between bg-success text-white">
+            <h3 class="card-title mb-0">
+                <i class="fas fa-tasks me-2"></i> Actividades del Curso: <span class="fw-bold">{{ $curso->nombre }}</span>
+            </h3>
             @if(auth()->user()->hasRole('Administrador') || auth()->user()->hasRole('Capacitador'))
-                <button class="btn btn-success btn-sm" onclick="showCreateActivityModal({{ $curso->id }})">
-                    <i class="fas fa-laptop-code"></i> Crear Actividad
-                </button> 
-            @endif           
+                <button class="btn btn-light btn-sm d-flex align-items-center gap-2" onclick="showCreateActivityModal({{ $curso->id }})">
+                  Crear Actividad
+                </button>
+            @endif
         </div>
+        
         <div class="card-body table-responsive">
             <table id="itinerariosTable" class="table table-bordered table-striped">
                 <thead>
@@ -50,18 +53,8 @@ $(document).ready(function() {
             { data: 'tema', name: 'tema' },
             { data: 'link', name: 'link' },
             { 
-                data: null, 
+                data: 'acciones', 
                 name: 'acciones',
-                render: function (data, type, row) {
-                    @if(auth()->user()->hasRole('Administrador') || auth()->user()->hasRole('Capacitador'))
-                        return `
-                            <button class="btn btn-warning btn-sm" onclick="editItinerario(${row.id})">Editar</button>
-                            <button class="btn btn-danger btn-sm" onclick="deleteItinerario(${row.id})">Eliminar</button>
-                        `;
-                    @else
-                        return '';
-                    @endif
-                },
                 orderable: false,
                 searchable: false,
             }

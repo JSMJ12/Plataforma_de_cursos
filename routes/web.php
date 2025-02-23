@@ -126,3 +126,7 @@ Route::get('/trabajos/all', [TrabajoController::class, 'trabajos_todos'])->name(
 Route::resource('trabajos', TrabajoController::class)->middleware('auth');
 // Postulaciones
 Route::resource('postulaciones', PostulacionController::class)->middleware('auth');
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

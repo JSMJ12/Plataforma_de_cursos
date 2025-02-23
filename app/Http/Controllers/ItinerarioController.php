@@ -39,11 +39,11 @@ class ItinerarioController extends Controller
         $request->validate([
             'fecha' => 'required|date',
             'hora_inicio' => 'required|date_format:H:i:s', // Incluir segundos
-            'hora_fin' => 'required|date_format:H:i:s',     
+            'hora_fin' => 'required|date_format:H:i:s',
             'tema' => 'required|string|max:255',
             'link' => 'nullable|url',
         ]);
-    
+
         $itinerario = Itinerario::findOrFail($id);
         $itinerario->update([
             'fecha' => $request->fecha,
@@ -52,10 +52,10 @@ class ItinerarioController extends Controller
             'tema' => $request->tema,
             'link' => $request->link,
         ]);
-    
+
         return response()->json(['success' => 'Itinerario actualizado exitosamente.']);
     }
-    
+
     public function edit($id)
     {
         $itinerario = Itinerario::findOrFail($id);
@@ -90,21 +90,33 @@ class ItinerarioController extends Controller
         $user = auth()->user();
         $isAdminOrCapacitador = $user->hasRole('Administrador') || $user->hasRole('Capacitador');
 
-        $itinerarios = Itinerario::where('curso_id', $cursoId)->get();
+        try {
+            $itinerarios = Itinerario::where('curso_id', $cursoId)->get();
 
-        return DataTables::of($itinerarios)
-            ->addColumn('acciones', function ($itinerario) use ($isAdminOrCapacitador) {
-                if ($isAdminOrCapacitador) {
-                    return '<button class="btn btn-warning btn-sm" onclick="editItinerario(' . $itinerario->id . ')">Editar</button>
-                            <button class="btn btn-danger btn-sm" onclick="deleteItinerario(' . $itinerario->id . ')">Eliminar</button>';
-                }
-                return ''; // No mostrar acciones si no es administrador o capacitador
-            })
-            ->addColumn('link', function ($itinerario) {
-                return '<a href="' . $itinerario->link . '" target="_blank">' . $itinerario->link . '</a>';
-            })
-            ->rawColumns(['acciones', 'link']) // Asegúrate de que el contenido HTML se renderiza correctamente
-            ->make(true);
+            return DataTables::of($itinerarios)
+                ->addColumn('acciones', function ($itinerario) use ($isAdminOrCapacitador) {
+                    if ($isAdminOrCapacitador) {
+                        return '
+                    <button class="btn btn-info btn-sm" title="Editar" onclick="editItinerario(' . e($itinerario->id) . ')">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="btn btn-danger btn-sm" title="Eliminar" onclick="deleteItinerario(' . e($itinerario->id) . ')">
+                        <i class="fas fa-trash"></i>
+                    </button>';
+                    }
+                    return ''; 
+                })
+                ->addColumn('link', function ($itinerario) {
+                    return $itinerario->link
+                        ? '<a href="' . e($itinerario->link) . '" target="_blank">' . e($itinerario->link) . '</a>'
+                        : 'N/A';
+                })
+                ->rawColumns(['acciones', 'link']) 
+                ->make(true);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Error al obtener los itinerarios: ' . $e->getMessage(),
+            ], 500);
+        }
     }
-
 }

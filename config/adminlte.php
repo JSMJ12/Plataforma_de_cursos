@@ -31,7 +31,7 @@ return [
     */
 
     'use_ico_only' => true,
-    'use_full_favicon' => false,
+    'use_full_favicon' => true,
 
     /*
     |--------------------------------------------------------------------------
@@ -63,8 +63,8 @@ return [
     |
     */
 
-    'logo' => '<b>Cursos </b>Posgrado',
-    'logo_img' => 'vendor/adminlte/dist/img/posgrado-16.png',
+    'logo' => '<b>SGA </b>Posgrado',
+    'logo_img' => 'vendor/adminlte/dist/img/LOGO.png',
     'logo_img_class' => 'brand-image img-circle elevation-3',
     'logo_img_xl' => null,
     'logo_img_xl_class' => 'brand-image-xs',
@@ -84,9 +84,9 @@ return [
     */
 
     'auth_logo' => [
-        'enabled' => false,
+        'enabled' => true,
         'img' => [
-            'path' => 'vendor/adminlte/dist/img/posgrado-16.png',
+            'path' => 'vendor/adminlte/dist/img/LOGO.png',
             'alt' => 'Auth Logo',
             'class' => '',
             'width' => 100,
@@ -153,8 +153,6 @@ return [
     'layout_fixed_sidebar' => true,
     'layout_fixed_navbar' => true,
     'layout_fixed_footer' => null,
-    'layout_dark_mode' => false,
-
     /*
     |--------------------------------------------------------------------------
     | Authentication Views Classes
@@ -290,12 +288,7 @@ return [
     */
 
     'menu' => [
-        // Navbar items:
-        [
-            'type'         => 'darkmode-widget',
-            'topnav_right' => true, // Or "topnav => true" to place on the left.
-        ],
-
+        
         // Sidebar items:
         [
             'type' => 'sidebar-menu-search',
