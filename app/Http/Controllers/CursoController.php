@@ -11,10 +11,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 
-
 class CursoController extends Controller
 {
-
     public function index(Request $request)
     {
         if ($request->ajax()) {
@@ -30,7 +28,7 @@ class CursoController extends Controller
             }
 
             return DataTables::of($cursos)
-                ->addColumn('capacitador_id', function ($curso) {
+                ->addColumn('capacitador_dni', function ($curso) {
                     return $curso->capacitador ? $curso->capacitador->dni : 'No asignado';
                 })
                 ->addColumn('estado', function ($curso) {
@@ -334,3 +332,4 @@ class CursoController extends Controller
     }
 
 }
+
